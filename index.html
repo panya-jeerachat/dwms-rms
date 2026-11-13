@@ -22,8 +22,7 @@ var CONFIG = {
      ผู้เข้าชมทั่วไปจึงโหลดข้อมูลไม่ได้ ส่วนปุ่มผู้ดูแลใช้รูปแบบโดเมน msu.ac.th ให้เลือกบัญชีมหาวิทยาลัยอัตโนมัติ */
   API: 'https://script.google.com/a/msu.ac.th/macros/s/AKfycbwH7yb5qXvl9fN8PGoRfeAQdkshnuNgYOXsXY96iQfLSKbIPcg4vob2Ik60NphdO9_K4w/exec',
   ADMIN_DOMAIN: 'msu.ac.th',
-  /* URL ของ Deployment สำหรับ SSO (Who has access: เฉพาะใน msu.ac.th) — เว้นว่าง = ใช้ Deployment เดิม */
-  ADMIN_URL: 'https://script.google.com/a/macros/msu.ac.th/s/AKfycbzx9te9aYMCiMSig4k7AGD6bGLWDDvgtG9KXu_5sndz0dCRGG1oh3_f1MyQHo9m8Sc9og/exec',
+  ADMIN_URL: '',   /* ว่าง = ใช้ Deployment เดียวกับ API ในรูปแบบโดเมน msu.ac.th (เข้าด้วยบัญชีมหาวิทยาลัยอัตโนมัติ) */
   CACHE_KEY: 'rms_profile_cache_v2',
   /* ระบบส่วนกลาง: ?u=ชื่อหน้าอีเมล (เช่น ?u=nittaya.ku) = หน้าของบุคลากรคนนั้น · ไม่ใส่ = เจ้าของระบบหลัก */
   U: (location.search.match(/[?&]u=([^&#]+)/)||[])[1]||'',
