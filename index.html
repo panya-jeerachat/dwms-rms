@@ -25,6 +25,8 @@ var CONFIG = {
   /* URL ของ Deployment สำหรับ SSO (Who has access: เฉพาะใน msu.ac.th) — เว้นว่าง = ใช้ Deployment เดิม */
   ADMIN_URL: 'https://script.google.com/a/macros/msu.ac.th/s/AKfycbzx9te9aYMCiMSig4k7AGD6bGLWDDvgtG9KXu_5sndz0dCRGG1oh3_f1MyQHo9m8Sc9og/exec',
   CACHE_KEY: 'rms_profile_cache_v2',
+  /* ระบบส่วนกลาง: ?u=ชื่อหน้าอีเมล (เช่น ?u=nittaya.ku) = หน้าของบุคลากรคนนั้น · ไม่ใส่ = เจ้าของระบบหลัก */
+  U: (location.search.match(/[?&]u=([^&#]+)/)||[])[1]||'',
   TIMEOUT_MS: 15000
 };
 (function(){
@@ -39,7 +41,8 @@ window.RMS_REQ = (function(){
   if (!window.fetch) return null;
   var ctl = window.AbortController ? new AbortController() : null;
   var t = ctl ? setTimeout(function(){ ctl.abort(); }, CONFIG.TIMEOUT_MS) : 0;
-  return fetch(CONFIG.API + '?page=data&_=' + Date.now(), {cache:'no-store', redirect:'follow', credentials:'omit', signal: ctl ? ctl.signal : undefined})
+  if (CONFIG.U) CONFIG.CACHE_KEY += '_' + CONFIG.U.toLowerCase();
+  return fetch(CONFIG.API + '?page=data' + (CONFIG.U ? '&u=' + CONFIG.U : '') + '&_=' + Date.now(), {cache:'no-store', redirect:'follow', credentials:'omit', signal: ctl ? ctl.signal : undefined})
     .then(function(r){ clearTimeout(t); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
 })();
 if (window.RMS_REQ) window.RMS_REQ.catch(function(){});   /* กันข้อความ unhandled ใน console */
@@ -520,7 +523,7 @@ function safeUrl(u){ u=String(u||'').trim(); return /^https?:\/\//i.test(u)?u:''
 function cls(w){ return LEVEL_CLS[w.level]||'oth'; }
 function isDone(w){ return DONE.indexOf(w.status)>=0; }
 function toast(t){ var e=$('toast'); e.textContent=t; e.classList.add('on'); clearTimeout(e._h); e._h=setTimeout(function(){e.classList.remove('on');},2400); }
-function pageUrl(){ return location.href.split('#')[0]; }
+function pageUrl(){ return location.href.split('#')[0]; }   /* คง ?u= ไว้ในลิงก์ที่คัดลอก */
 function thDate(iso){ var d=new Date(iso); if(isNaN(d)) return '-';
   return d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'})+' เวลา '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})+' น.'; }
 
@@ -541,12 +544,12 @@ function load(fresh){
   else slowHints();
   var req=(!fresh&&window.RMS_REQ)||requestFresh();
   window.RMS_REQ=null;
-  req.then(got).catch(function(){ jsonp(CONFIG.API+'?page=data',got,failed); });
+  req.then(got).catch(function(){ jsonp(CONFIG.API+'?page=data'+(CONFIG.U?'&u='+CONFIG.U:''),got,failed); });
 }
 function requestFresh(){
   var ctl=window.AbortController?new AbortController():null;
   var t=ctl?setTimeout(function(){ctl.abort();},CONFIG.TIMEOUT_MS):0;
-  return fetch(CONFIG.API+'?page=data&_='+Date.now(),{cache:'no-store',redirect:'follow',credentials:'omit',signal:ctl?ctl.signal:undefined})
+  return fetch(CONFIG.API+'?page=data'+(CONFIG.U?'&u='+CONFIG.U:'')+'&_='+Date.now(),{cache:'no-store',redirect:'follow',credentials:'omit',signal:ctl?ctl.signal:undefined})
     .then(function(r){ clearTimeout(t); if(!r.ok) throw 0; return r.json(); });
 }
 function slowHints(){
@@ -563,6 +566,7 @@ function jsonp(url,ok,fail){
   document.body.appendChild(s);
 }
 function got(j){
+  if(j&&j.ok===false&&j.message){ $('app').innerHTML='<div class="msg">'+esc(j.message)+'<br><a href="'+esc(location.pathname)+'">กลับหน้าหลัก</a></div>'; return; }
   if(!j||!j.ok){ failed(); return; }
   try{ localStorage.setItem(CONFIG.CACHE_KEY,JSON.stringify(j)); }catch(e){}
   var nsig=sig(j);
@@ -646,7 +650,7 @@ function icon(k){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentCo
 /* การ์ดประวัติด้านซ้าย */
 function profileCard(){
   var p=D.profile, pub=D.works.filter(function(w){return w.category==='ผลงานตีพิมพ์';});
-  var photo=safeUrl(p.photo);
+  var photo=safeUrl(p.photo)||(/^data:image\/(png|jpe?g|gif|webp);base64,/.test(String(p.photo||''))?p.photo:'');
   var ph=photo?'<img class="ph" src="'+esc(photo)+'" alt="รูป '+esc(p.name_th)+'">':'<div class="ph" aria-hidden="true">'+esc((p.name_th||'?').replace(/^(นาย|นางสาว|นาง)/,'').charAt(0))+'</div>';
   var done=pub.filter(isDone).length, wip=pub.length-done;
   var blocks=pub.slice().sort(function(a,b){ return (isDone(b)-isDone(a))||(LEVEL_ORDER.indexOf(a.level)-LEVEL_ORDER.indexOf(b.level)); })
