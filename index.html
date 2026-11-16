@@ -41,8 +41,10 @@ window.RMS_REQ = (function(){
   if (!window.fetch) return null;
   var ctl = window.AbortController ? new AbortController() : null;
   var t = ctl ? setTimeout(function(){ ctl.abort(); }, CONFIG.TIMEOUT_MS) : 0;
-  if (CONFIG.U) CONFIG.CACHE_KEY += '_' + CONFIG.U.toLowerCase();
-  return fetch(CONFIG.API + '?page=data' + (CONFIG.U ? '&u=' + CONFIG.U : '') + '&_=' + Date.now(), {cache:'no-store', redirect:'follow', credentials:'omit', signal: ctl ? ctl.signal : undefined})
+  /* ไม่มี ?u= = หน้าคลังผลงานของคณะ · มี ?u= = หน้าผลงานรายบุคคล */
+  CONFIG.PAGE = CONFIG.U ? 'data' : 'faculty';
+  CONFIG.CACHE_KEY += CONFIG.U ? '_' + CONFIG.U.toLowerCase() : '_faculty';
+  return fetch(CONFIG.API + '?page=' + CONFIG.PAGE + (CONFIG.U ? '&u=' + CONFIG.U : '') + '&_=' + Date.now(), {cache:'no-store', redirect:'follow', credentials:'omit', signal: ctl ? ctl.signal : undefined})
     .then(function(r){ clearTimeout(t); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
 })();
 if (window.RMS_REQ) window.RMS_REQ.catch(function(){});   /* กันข้อความ unhandled ใน console */
@@ -429,6 +431,82 @@ body.dlg-open{overflow:hidden}
 .lgn-opt .d{display:block;font-size:13px;color:var(--mute);margin-top:3px;line-height:1.55}
 .lgn-note{font-size:12.5px;color:var(--mute);line-height:1.6;margin-top:4px}
 
+/* ───── หน้าคลังผลงานของคณะ ───── */
+.fac{width:100%;padding:20px clamp(12px,2vw,32px) 36px}
+.fhero{border-radius:22px;background:radial-gradient(900px 300px at 85% 0%,rgba(255,255,255,.14),transparent 60%),linear-gradient(120deg,#0D2B5C 0%,#1565C0 55%,#4F46E5 100%);color:#fff;padding:34px clamp(20px,3vw,44px);margin-bottom:18px;box-shadow:0 20px 50px -24px rgba(13,43,92,.7)}
+.fhero h1{font-family:'Kanit';font-weight:600;font-size:clamp(24px,2.6vw,34px);line-height:1.25}
+.fhero h1 span{font-weight:400;font-size:.62em;opacity:.9}
+.fhero p{max-width:820px;margin-top:10px;font-size:15.5px;opacity:.92;line-height:1.75}
+.fsearch{display:flex;gap:8px;margin-top:18px;max-width:720px}
+.fsearch input{flex:1;border:0;border-radius:12px;padding:13px 16px;font-size:15.5px;box-shadow:0 6px 18px -8px rgba(0,0,0,.4)}
+.fsearch button{border:0;border-radius:12px;padding:0 22px;background:#FBBF24;color:#1F2937;font-weight:700;font-size:15px;cursor:pointer}
+.fkpi{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.fgrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:18px;margin-bottom:18px}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px}
+.fgrid2 .fcard{margin-bottom:0}
+.fcard h2{font-family:'Kanit';font-weight:500;font-size:20px;color:var(--navy)}
+.fcard .lead{color:var(--mute);font-size:14px;margin:2px 0 14px}
+.fbars{display:flex;align-items:flex-end;gap:14px;min-height:370px;padding-top:6px;overflow-x:auto;background:linear-gradient(var(--ink),var(--ink)) left bottom 28px/100% 2px no-repeat}
+.fbar{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;cursor:pointer;min-width:52px;flex:1;max-width:110px;padding:0}
+.fbar:hover .fstack{filter:brightness(1.08);transform:translateY(-2px)}
+.fbn{font-family:'Kanit';font-size:14px;color:var(--navy)}
+.fstack{display:flex;flex-direction:column-reverse;width:70%;border-radius:8px 8px 0 0;overflow:hidden;box-shadow:0 8px 14px -8px rgba(13,43,92,.45);transition:transform .15s}
+.fstack i{display:block;min-height:3px}
+.fby{font-size:13px;color:var(--ink);height:28px;line-height:28px;font-weight:600}
+.fbars+.legend{margin-top:10px}
+.flatest{display:flex;flex-direction:column;gap:8px}
+.fmini{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);border-left:4px solid var(--c);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;font:inherit;color:var(--ink)}
+.fmini:hover{border-color:var(--c);box-shadow:0 4px 12px -6px rgba(13,43,92,.25)}
+.fmini .tx{flex:1;min-width:0}.fmini b{display:block;font-size:14px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fmini small{color:var(--mute);font-size:12.5px}
+.fmini .badges{margin-bottom:2px}
+.fph,.fph-s,.fph-m,.fph-l,.fph-p{object-fit:cover;flex:none;background:#E8EEF6;display:inline-grid;place-items:center;font-family:'Kanit';color:var(--navy)}
+.fph{width:40px;height:46px;border-radius:9px}.fph-s{width:24px;height:28px;border-radius:6px;font-size:12px}.fph-m{width:52px;height:60px;border-radius:11px;font-size:18px}
+.fph-l{width:64px;height:76px;border-radius:12px;font-size:22px}.fph-p{width:64px;height:76px;border-radius:12px;font-size:22px}
+.frepo-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.frepo-tools input{flex:1;min-width:240px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;font-size:15px}
+.frepo-tools select{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.cdot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+.frows{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,560px),1fr));gap:0 34px}
+.frow{display:grid;grid-template-columns:5px 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+.frow-bar{border-radius:3px;background:var(--c)}
+.frow-bar.wip{background:repeating-linear-gradient(180deg,var(--c) 0 6px,transparent 6px 10px)}
+.frow h3{font-size:16px;font-family:'Sarabun';font-weight:700;line-height:1.45;margin-top:4px}
+.frow h3 a{color:inherit;text-decoration:none}.frow h3 a:hover{color:var(--blue);text-decoration:underline}
+.frow .en{color:var(--mute);font-style:italic;font-size:14px}
+.frow .src{font-size:14px;color:var(--mute)}
+.fown{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 2px;font-size:14px}
+.fown a{display:inline-flex;align-items:center;gap:7px;color:var(--navy);font-weight:600;text-decoration:none}
+.fown a:hover span{text-decoration:underline}
+.fown small{color:var(--mute)}
+.frow .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.frow .acts a,.frow .acts button{font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:7px;padding:4px 11px;text-decoration:none;cursor:pointer}
+.frow .acts .more{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:600}
+.fmore{text-align:center;margin-top:14px}
+.fmore button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 18px;color:var(--blue);font-weight:600;cursor:pointer}
+.frank{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:10px}
+.frk{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 14px;text-decoration:none;color:var(--ink);background:#fff}
+.frk:hover{border-color:var(--blue);box-shadow:0 6px 16px -10px rgba(13,43,92,.35)}
+.frk.top1{background:linear-gradient(90deg,#FFF8E1,#fff);border-color:#F5D27A}.frk.top2{background:linear-gradient(90deg,#F4F6F9,#fff)}.frk.top3{background:linear-gradient(90deg,#FBEFE6,#fff)}
+.frk-n{width:32px;text-align:center;font-family:'Kanit';font-size:20px;color:var(--mute);flex:none}
+.frk-tx{flex:1;min-width:0}.frk-tx b{display:block;font-size:15px}.frk-tx small{display:block;color:var(--mute);font-size:12.5px}
+.frk-cats{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 2px}
+.frk-cats span{font-size:11px;font-weight:700;border-radius:5px;padding:1px 7px;background:color-mix(in srgb,var(--c) 12%,#fff);color:var(--c)}
+.frk-span{font-size:12px!important}
+.frk-sc{width:86px;flex:none;text-align:center;position:relative;padding-bottom:6px}
+.frk-sc b{display:block;font-family:'Kanit';font-size:24px;color:var(--navy);line-height:1}.frk-sc small{font-size:11.5px;color:var(--mute)}
+.frk-sc i{position:absolute;left:8px;bottom:0;height:4px;border-radius:3px;background:linear-gradient(90deg,#1565C0,#4F46E5)}
+.fpeople{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.fpc{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-decoration:none;color:var(--ink);background:#fff}
+.fpc:hover{border-color:var(--blue);box-shadow:0 6px 16px -10px rgba(13,43,92,.35)}
+.fpc .tx{flex:1;min-width:0}.fpc b{display:block;font-size:14.5px}.fpc small{display:block;color:var(--mute);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fpc-n{display:block;font-size:12.5px;color:var(--blue);margin-top:3px}.fpc-n b{display:inline;font-family:'Kanit'}
+.fowner{display:flex;gap:14px;align-items:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.fowner:hover{border-color:var(--blue)}
+.fowner b{display:block;font-size:16px}.fowner small{display:block;color:var(--mute);font-size:13px}.fowner em{font-style:normal;color:var(--blue);font-size:13px;font-weight:600}
+.btnl{border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-size:14px;color:var(--blue);text-decoration:none;font-weight:600}
+.backfac{text-decoration:none!important}
+@media print{.fhero .fsearch,.frepo-tools,.fmore,.frow .acts{display:none!important}}
+
 /* โครงร่างระหว่างโหลด */
 .sk{background:linear-gradient(90deg,#E6ECF4 25%,#F1F5FA 37%,#E6ECF4 63%);background-size:400% 100%;animation:shim 1.3s ease infinite;border-radius:6px}
 @keyframes shim{0%{background-position:100% 50%}100%{background-position:0 50%}}
@@ -483,6 +561,7 @@ body.dlg-open{overflow:hidden}
     <div class="name"><b>ผลงานวิชาการและวิจัย</b><span>คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</span></div>
     <div class="act">
       <span class="sync" id="sync" hidden><i></i><span class="txt"></span></span>
+      <a class="backfac" id="backFac" hidden href="./">← <span class="lbl">คลังผลงานคณะ</span></a>
       <button onclick="copyLink()" aria-label="คัดลอกลิงก์หน้านี้">🔗 <span class="lbl">คัดลอกลิงก์</span></button>
       <button onclick="window.print()" aria-label="พิมพ์หรือบันทึกเป็น PDF">🖨 <span class="lbl">พิมพ์ / PDF</span></button>
       <span class="vsep" aria-hidden="true"></span>
@@ -569,19 +648,19 @@ function setSync(state,text){
   el.hidden=false; el.className='sync '+state; el.querySelector('.txt').textContent=text; el.title=text;
 }
 function readCache(){ try{ var j=JSON.parse(localStorage.getItem(CONFIG.CACHE_KEY)||'null'); return j&&j.ok?j:null; }catch(e){ return null; } }
-function sig(j){ return JSON.stringify([j.profile,j.works]); }
+function sig(j){ return JSON.stringify([j.profile,j.works,j.people]); }
 function load(fresh){
   var cached=fresh?null:readCache();
   if(cached){ render(cached); SHOWN_SIG=sig(cached); setSync('busy','กำลังตรวจข้อมูลล่าสุด…'); }
   else slowHints();
   var req=(!fresh&&window.RMS_REQ)||requestFresh();
   window.RMS_REQ=null;
-  req.then(got).catch(function(){ jsonp(CONFIG.API+'?page=data'+(CONFIG.U?'&u='+CONFIG.U:''),got,failed); });
+  req.then(got).catch(function(){ jsonp(CONFIG.API+'?page='+CONFIG.PAGE+(CONFIG.U?'&u='+CONFIG.U:''),got,failed); });
 }
 function requestFresh(){
   var ctl=window.AbortController?new AbortController():null;
   var t=ctl?setTimeout(function(){ctl.abort();},CONFIG.TIMEOUT_MS):0;
-  return fetch(CONFIG.API+'?page=data'+(CONFIG.U?'&u='+CONFIG.U:'')+'&_='+Date.now(),{cache:'no-store',redirect:'follow',credentials:'omit',signal:ctl?ctl.signal:undefined})
+  return fetch(CONFIG.API+'?page='+CONFIG.PAGE+(CONFIG.U?'&u='+CONFIG.U:'')+'&_='+Date.now(),{cache:'no-store',redirect:'follow',credentials:'omit',signal:ctl?ctl.signal:undefined})
     .then(function(r){ clearTimeout(t); if(!r.ok) throw 0; return r.json(); });
 }
 function slowHints(){
@@ -603,12 +682,12 @@ function got(j){
   try{ localStorage.setItem(CONFIG.CACHE_KEY,JSON.stringify(j)); }catch(e){}
   var nsig=sig(j);
   if(nsig!==SHOWN_SIG){ var y=window.scrollY; render(j); SHOWN_SIG=nsig; window.scrollTo(0,y); }
-  else { D.generated=j.generated; }
+  else if(D){ D.generated=j.generated; }
   setSync('live','ข้อมูลล่าสุด');
   setTimeout(function(){ var el=$('sync'); if(el&&el.classList.contains('live')) el.hidden=true; },4000);
 }
 function failed(){
-  if(D){ setSync('off','แสดงข้อมูลที่บันทึกไว้ · เชื่อมต่อไม่ได้ชั่วคราว'); return; }
+  if(D||FAC){ setSync('off','แสดงข้อมูลที่บันทึกไว้ · เชื่อมต่อไม่ได้ชั่วคราว'); return; }
   var c=readCache();
   if(c){ render(c); SHOWN_SIG=sig(c); setSync('off','แสดงข้อมูลที่บันทึกไว้ · เชื่อมต่อไม่ได้ชั่วคราว'); return; }
   var n=$('skNote');
@@ -618,6 +697,7 @@ function retry(){ var n=$('skNote'); if(n) n.textContent='กำลังลอ�
 
 /* ───── สร้างหน้า ───── */
 function render(j){
+  if(j.mode==='faculty'){ renderFaculty(j); return; }
   D=j; D.works=(D.works||[]).slice();
   var names=String(D.profile.owner_names||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
   OWNER_RX=names.length?new RegExp('('+names.map(function(n){return esc(n).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','g'):null;
@@ -1257,6 +1337,159 @@ function jsonLd(){
   document.head.appendChild(s);
 }
 
+/*══════════════════════════════════════════════════════════════════
+  หน้าคลังผลงานของคณะ (eng.msu.ac.th/rms/ ไม่มี ?u=)
+  KPI รวม · ผลงานรายปี · ผลงานล่าสุด · คลังผลงาน (ค้นหา/กรอง/ดาวน์โหลด) · บุคลากรผลงานโดดเด่น · บุคลากรที่มีผลงาน
+  ทุกการค้นหา/กรองทำในเบราว์เซอร์จากข้อมูลชุดเดียว (ไม่เรียกเซิร์ฟเวอร์ซ้ำ)
+══════════════════════════════════════════════════════════════════*/
+var FAC=null, FP={}, FX={q:'',cat:'',year:'',level:'',sort:'new',n:20}, FS={q:'',grp:''};
+var FAC_CATS=['ผลงานตีพิมพ์','คู่มือปฏิบัติงาน','ผลงานเชิงวิเคราะห์','R2R/นวัตกรรม','รางวัล','โครงการวิจัย','การนำเสนอ'];
+function facColor(x){ return LEVEL_CLS[x.l]?LEVEL_COLOR[LEVEL_CLS[x.l]]:(CAT_COLOR[x.c]||LEVEL_COLOR.oth); }
+function facDone(x){ return DONE.indexOf(x.s)>=0; }
+function personUrl(uid,hash){ return location.pathname+'?u='+encodeURIComponent(uid)+(hash?'#'+hash:''); }
+function personPh(p,cls){
+  var ch=String(p&&p.name||'?').replace(/^(นาย|นางสาว|นาง)/,'').trim().charAt(0)||'?';
+  return p&&p.photo?'<img class="'+cls+'" src="'+esc(p.photo)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML=\'<span class=&quot;'+cls+' ini&quot;>'+esc(ch)+'</span>\'">':'<span class="'+cls+' ini">'+esc(ch)+'</span>';
+}
+function facNorm(x){ return String(x||'').toLowerCase().replace(/\s+/g,''); }
+
+function renderFaculty(j){
+  FAC=j; FP={}; (j.people||[]).forEach(function(p){ FP[p.u]=p; });
+  document.querySelector('.top .name b').textContent='คลังผลงานวิชาการและวิจัย';
+  document.querySelector('.top .name span').textContent='บุคลากรคณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม';
+  var W=j.works||[], P=j.people||[];
+  var pub=W.filter(function(x){ return x.c==='ผลงานตีพิมพ์'&&facDone(x); });
+  var man=W.filter(function(x){ return x.c==='คู่มือปฏิบัติงาน'||x.c==='ผลงานเชิงวิเคราะห์'; });
+  var inno=W.filter(function(x){ return x.c==='R2R/นวัตกรรม'||x.c==='รางวัล'; });
+  var docs=W.reduce(function(n,x){ return n+(x.docs||0); },0);
+  var K=[
+    {g:'linear-gradient(135deg,#0D2B5C,#1565C0)',n:P.length,u:'คน',l:'บุคลากรที่ร่วมเผยแพร่',s:'จากผู้ใช้งาน '+(j.staffTotal||P.length)+' คน',go:"facGo('people')"},
+    {g:'linear-gradient(135deg,#4F46E5,#1565C0)',n:W.length,u:'รายการ',l:'ผลงานทั้งหมดในคลัง',s:'เสร็จ/เผยแพร่แล้ว '+W.filter(facDone).length,go:"facFilter('')"},
+    {g:'linear-gradient(135deg,#0B7A5B,#10B981)',n:pub.length,u:'เรื่อง',l:'ผลงานตีพิมพ์แล้ว',s:'TCI1 '+pub.filter(function(x){return x.l==='TCI กลุ่ม 1';}).length+' · TCI2 '+pub.filter(function(x){return x.l==='TCI กลุ่ม 2';}).length+' · Proc. '+pub.filter(function(x){return /^Proceedings/.test(x.l);}).length,go:"facFilter('ผลงานตีพิมพ์')"},
+    {g:'linear-gradient(135deg,#7C3AED,#0891B2)',n:man.length,u:'เล่ม',l:'คู่มือและผลงานเชิงวิเคราะห์',s:'คู่มือ '+W.filter(function(x){return x.c==='คู่มือปฏิบัติงาน';}).length+' · วิเคราะห์ '+W.filter(function(x){return x.c==='ผลงานเชิงวิเคราะห์';}).length,go:"facFilter('คู่มือปฏิบัติงาน')"},
+    {g:'linear-gradient(135deg,#D97706,#DB2777)',n:inno.length,u:'รายการ',l:'นวัตกรรมและรางวัล',s:'นวัตกรรม '+W.filter(function(x){return x.c==='R2R/นวัตกรรม';}).length+' · รางวัล '+W.filter(function(x){return x.c==='รางวัล';}).length,go:"facFilter('R2R/นวัตกรรม')"},
+    {g:'linear-gradient(135deg,#334155,#64748B)',n:docs,u:'ไฟล์',l:'เอกสารหลักฐานให้ศึกษา/ดาวน์โหลด',s:'ไฟล์เล่ม · เอกสารแนบ · หนังสือรับรอง',go:"facFilter('')"}
+  ];
+  var h='<div class="fac">';
+  h+='<section class="fhero"><div class="fhero-in"><h1>คลังผลงานวิชาการและวิจัย<br><span>คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</span></h1>'+
+    '<p>รวมผลงานตีพิมพ์ คู่มือปฏิบัติงาน ผลงานเชิงวิเคราะห์ นวัตกรรม รางวัล และหลักฐานเชิงประจักษ์ของบุคลากร เปิดให้ศึกษา ค้นคว้า และใช้เป็นแนวทางในการพัฒนางานและจัดทำผลงาน</p>'+
+    '<div class="fsearch"><input id="facQ0" placeholder="ค้นหาผลงาน ชื่อเรื่อง คำสำคัญ หรือชื่อบุคลากร…" onkeydown="if(event.key===\'Enter\')facSearch(this.value)"><button onclick="facSearch($(\'facQ0\').value)">ค้นหา</button></div></div></section>';
+  h+='<div class="hero fkpi">'+K.map(function(k){ return '<button class="hk tilt" style="--g:'+k.g+'" onclick="'+k.go+'"><span class="hl">'+esc(k.l)+'</span><span class="hn">'+k.n+'<small>'+k.u+'</small></span><span class="hs">'+esc(k.s)+'</span></button>'; }).join('')+'</div>';
+  h+='<div class="fgrid2"><section class="fcard"><h2>ผลงานของคณะรายปี</h2><p class="lead">นับตามปีที่ตีพิมพ์/เผยแพร่ (หรือปีงบประมาณ) · กดแท่งเพื่อดูผลงานของปีนั้น</p>'+facYears(W)+'</section>'+
+    '<section class="fcard"><h2>ผลงานล่าสุด</h2><p class="lead">อัปเดตใหม่ล่าสุดจากบุคลากร</p><div class="flatest">'+W.slice(0,6).map(facMini).join('')+'</div></section></div>';
+  h+='<section class="fcard" id="facRepo"><h2>คลังผลงาน</h2><p class="lead">ค้นหา เปิดดู และดาวน์โหลดเอกสารเพื่อศึกษาเป็นตัวอย่าง · เรียงผลงานล่าสุดก่อน</p>'+
+    '<div class="frepo-tools"><input id="facQ" placeholder="ค้นหาชื่อเรื่อง คำสำคัญ ผู้แต่ง หน่วยงาน…" oninput="FX.q=this.value;FX.n=20;facRepo()" value="">'+
+    '<select id="facYear" onchange="FX.year=this.value;FX.n=20;facRepo()"></select><select id="facLevel" onchange="FX.level=this.value;FX.n=20;facRepo()"></select>'+
+    '<select onchange="FX.sort=this.value;facRepo()"><option value="new">อัปเดตล่าสุดก่อน</option><option value="year">ปีใหม่ก่อน</option><option value="title">เรียงตามชื่อเรื่อง</option></select></div>'+
+    '<div class="filters" id="facCats"></div><div id="facList"></div></section>';
+  h+='<section class="fcard" id="facRank"><h2>บุคลากรผลงานโดดเด่น</h2><p class="lead">เชิดชูบุคลากรที่สร้างผลงานต่อเนื่องและมีหลักฐานเชิงประจักษ์ · <button class="lnk" onclick="facCriteria()">เกณฑ์การจัดลำดับ</button></p>'+facRanking(P)+'</section>';
+  h+='<section class="fcard" id="facPeople"><h2>บุคลากรที่มีผลงาน</h2><p class="lead">เลือกบุคลากรเพื่อดูหน้าผลงานรายบุคคล ติดตามผลงานในสายงานที่สนใจ</p>'+
+    '<div class="frepo-tools"><input id="facPQ" placeholder="ค้นหาชื่อ ตำแหน่ง หน่วยงาน…" oninput="FS.q=this.value;facPeople()"></div><div class="filters" id="facGrp"></div><div class="fpeople" id="facPList"></div></section>';
+  h+='</div>';
+  $('app').innerHTML=h;
+  $('foot').hidden=false;
+  var years={}; W.forEach(function(x){ var y=x.y||x.fy; if(y) years[y]=1; });
+  $('facYear').innerHTML='<option value="">ทุกปี</option>'+Object.keys(years).sort().reverse().map(function(y){ return '<option>'+y+'</option>'; }).join('');
+  var lv={}; W.forEach(function(x){ if(x.l) lv[x.l]=1; });
+  $('facLevel').innerHTML='<option value="">ทุกระดับ</option>'+LEVEL_ORDER.filter(function(l){ return lv[l]; }).map(function(l){ return '<option>'+esc(l)+'</option>'; }).join('');
+  facRepo(); facPeople();
+}
+/* แท่งรายปี (ซ้อนตามประเภท) */
+function facYears(W){
+  var by={}, max=0;
+  W.forEach(function(x){ var y=x.y||x.fy; if(!y) return; (by[y]=by[y]||{n:0,c:{}}); by[y].n++; by[y].c[x.c]=(by[y].c[x.c]||0)+1; });
+  var ys=Object.keys(by).sort().slice(-8); ys.forEach(function(y){ max=Math.max(max,by[y].n); });
+  if(!ys.length) return '<div class="empty">ยังไม่มีผลงาน</div>';
+  return '<div class="fbars">'+ys.map(function(y){
+    var b=by[y];
+    return '<button class="fbar" onclick="FX.year=\''+y+'\';$(\'facYear\').value=\''+y+'\';FX.n=20;facRepo();facGo(\'repo\')" title="ปี '+y+' · '+b.n+' ผลงาน"><span class="fbn">'+b.n+'</span><span class="fstack" style="height:'+Math.max(8,b.n/max*300)+'px">'+
+      FAC_CATS.filter(function(c){ return b.c[c]; }).map(function(c){ return '<i style="flex:'+b.c[c]+';background:'+(CAT_COLOR[c]||'#5E6B80')+'"></i>'; }).join('')+'</span><span class="fby">'+y+'</span></button>';
+  }).join('')+'</div><div class="legend">'+FAC_CATS.filter(function(c){ return W.some(function(x){ return x.c===c; }); }).map(function(c){ return '<span><i class="lg" style="background:'+CAT_COLOR[c]+'"></i>'+esc(c)+'</span>'; }).join('')+'</div>';
+}
+function facMini(x){
+  var p=FP[x.o]||{};
+  return '<button class="fmini" style="--c:'+facColor(x)+'" onclick="facOpen(\''+esc(x.id)+'\')">'+personPh(p,'fph')+'<span class="tx"><span class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span></span><b>'+esc(x.t)+'</b><small>'+esc(p.name||x.o)+(x.y?' · พ.ศ. '+x.y:'')+'</small></span></button>';
+}
+/* คลังผลงาน */
+function facRepo(){
+  var W=FAC.works, q=facNorm(FX.q);
+  var base=W.filter(function(x){
+    if(FX.year&&String(x.y||x.fy)!==FX.year) return false;
+    if(FX.level&&x.l!==FX.level) return false;
+    if(q){ var p=FP[x.o]||{}; if(![x.t,x.te,x.a,x.kw,x.src,x.d,p.name,p.position,p.unit].some(function(v){ return facNorm(v).indexOf(q)>=0; })) return false; }
+    return true;
+  });
+  var cats=FAC_CATS.filter(function(c){ return base.some(function(x){ return x.c===c; }); });
+  $('facCats').innerHTML='<button class="chip" aria-pressed="'+(!FX.cat)+'" onclick="FX.cat=\'\';FX.n=20;facRepo()">ทั้งหมด '+base.length+'</button>'+
+    cats.map(function(c){ var n=base.filter(function(x){return x.c===c;}).length; return '<button class="chip" aria-pressed="'+(FX.cat===c)+'" onclick="FX.cat=\''+esc(c)+'\';FX.n=20;facRepo()"><i class="cdot" style="background:'+CAT_COLOR[c]+'"></i>'+esc(c)+' '+n+'</button>'; }).join('');
+  var L=base.filter(function(x){ return !FX.cat||x.c===FX.cat; });
+  if(FX.sort==='year') L=L.slice().sort(function(a,b){ return (Number(b.y||b.fy)||0)-(Number(a.y||a.fy)||0); });
+  else if(FX.sort==='title') L=L.slice().sort(function(a,b){ return String(a.t).localeCompare(String(b.t),'th'); });
+  var show=L.slice(0,FX.n);
+  $('facList').innerHTML=(show.length?'<div class="frows">'+show.map(facRow).join('')+'</div>':'<div class="empty">ไม่พบผลงานตามเงื่อนไข</div>')+
+    (L.length>FX.n?'<div class="fmore"><button onclick="FX.n+=20;facRepo()">แสดงเพิ่มอีก '+Math.min(20,L.length-FX.n)+' รายการ (ทั้งหมด '+L.length+')</button></div>':'');
+}
+function facRow(x){
+  var p=FP[x.o]||{}, files=docsOf({bookFile:x.book,files:x.files});
+  return '<article class="frow" style="--c:'+facColor(x)+'"><div class="frow-bar'+(facDone(x)?'':' wip')+'"></div><div class="frow-main">'+
+    '<div class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span><span class="st '+(facDone(x)?'ok':'wip')+'">'+esc(x.s)+'</span>'+(x.y||x.fy?'<span>'+(x.y?'พ.ศ. '+x.y:'ปีงบ '+x.fy)+'</span>':'')+(x.l?'<span>'+esc(x.c)+'</span>':'')+'</div>'+
+    '<h3><a href="#" onclick="facOpen(\''+esc(x.id)+'\');return false">'+esc(x.t)+'</a></h3>'+(x.te?'<div class="en">'+esc(x.te)+'</div>':'')+
+    '<div class="fown"><a href="'+esc(personUrl(x.o))+'">'+personPh(p,'fph-s')+'<span>'+esc(p.name||x.o)+'</span></a>'+(p.position?'<small>'+esc(p.position)+'</small>':'')+'</div>'+
+    ([x.src,x.d].filter(Boolean).length?'<div class="src">'+esc([x.src,x.d].filter(Boolean).join(', '))+'</div>':'')+
+    '<div class="acts"><button class="more" onclick="facOpen(\''+esc(x.id)+'\')">ดูรายละเอียด'+(x.docs?' · เอกสาร '+x.docs:'')+'</button>'+
+      files.slice(0,2).map(function(d){ return '<a href="'+esc(safeUrl(d.url))+'" target="_blank" rel="noopener">📄 '+esc(d.main?'ไฟล์เล่มฉบับสมบูรณ์':shortName(d.name))+'</a>'; }).join('')+
+      (safeUrl(x.url)?'<a href="'+esc(safeUrl(x.url))+'" target="_blank" rel="noopener">เปิดบทความ ↗</a>':'')+'</div></div></article>';
+}
+/* รายละเอียดผลงาน (ป๊อปอัป) */
+function facOpen(id){
+  var x=FAC.works.filter(function(w){ return w.id===id; })[0]; if(!x) return;
+  var p=FP[x.o]||{}, docs=docsOf({bookFile:x.book,files:x.files});
+  if($('dlg').hidden) LAST_FOCUS=document.activeElement;
+  var kv=function(k,v){ return v?'<dt>'+k+'</dt><dd>'+v+'</dd>':''; };
+  var h='<div class="dlg-hd"><span class="rule" style="background:'+facColor(x)+'"></span><div class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span><span class="st '+(facDone(x)?'ok':'wip')+'">'+esc(x.s)+'</span>'+(x.l?'<span>'+esc(x.c)+'</span>':'')+'</div>'+
+    '<h2 id="dlgTitle">'+esc(x.t)+'</h2>'+(x.te?'<div class="en">'+esc(x.te)+'</div>':'')+'<button class="dlg-x" type="button" onclick="closeWork()" aria-label="ปิด">×</button></div><div class="dlg-bd">'+
+    '<section class="dsec"><a class="fowner" href="'+esc(personUrl(x.o))+'">'+personPh(p,'fph-l')+'<span><b>'+esc(p.name||x.o)+'</b><small>'+esc([p.position,p.rank,p.unit].filter(Boolean).join(' · '))+'</small><em>ดูผลงานทั้งหมดของบุคลากรท่านนี้ ›</em></span></a></section>'+
+    '<section class="dsec"><h3>ข้อมูลผลงาน</h3><dl class="kvg">'+kv('ผู้แต่ง/คณะผู้จัดทำ',esc(x.a))+kv('แหล่งเผยแพร่',esc(x.src))+kv('รายละเอียด',esc(x.d))+kv('ปี',x.y?'พ.ศ. '+esc(x.y):'')+kv('ปีงบประมาณ',esc(x.fy||''))+kv('คำสำคัญ',esc(x.kw))+
+      kv('ลิงก์ผลงาน',safeUrl(x.url)?'<a href="'+esc(safeUrl(x.url))+'" target="_blank" rel="noopener">'+esc(x.url)+'</a>':'')+kv('หนังสือรับรองการเผยแพร่',x.ev?x.ev+' ฉบับ (ดูในหน้าบุคลากร)':'')+'</dl></section>'+
+    '<section class="dsec"><h3>เอกสารผลงาน <span class="n">'+docs.length+'</span></h3>'+(docs.length?'<div class="docs">'+docs.map(function(d,i){ return docRow(d,'f'+i); }).join('')+'</div>':'<p class="lead" style="margin:0">ยังไม่มีเอกสารที่เผยแพร่</p>')+'</section></div>'+
+    '<div class="dlg-ft"><span class="grow"></span><a class="btnl" href="'+esc(personUrl(x.o,'w-'+x.id))+'">เปิดในหน้าผลงานของบุคลากร (บทคัดย่อ หลักฐาน การอ้างอิง) ›</a><button type="button" onclick="closeWork()">ปิด</button></div>';
+  $('dlgBox').innerHTML=h; $('dlg').hidden=false; document.body.classList.add('dlg-open'); $('dlg').scrollTop=0; $('dlgBox').focus();
+}
+/* อันดับบุคลากร */
+function facRanking(P){
+  var L=P.slice().sort(function(a,b){ return (b.score-a.score)||(b.years.length-a.years.length)||String(b.latest).localeCompare(String(a.latest)); }).slice(0,10);
+  if(!L.length) return '<div class="empty">ยังไม่มีผลงาน</div>';
+  var top=L[0].score||1;
+  return '<ol class="frank">'+L.map(function(p,i){
+    var span=p.years.length?(p.years.length>1?'ผลงานต่อเนื่อง '+p.years.length+' ปี ('+p.years[0]+'–'+p.years[p.years.length-1]+')':'ผลงานปี '+p.years[0]):'';
+    var cats=FAC_CATS.filter(function(c){ return p.cats[c]; }).map(function(c){ return '<span style="--c:'+CAT_COLOR[c]+'">'+esc(c)+' '+p.cats[c]+'</span>'; }).join('');
+    return '<li><a href="'+esc(personUrl(p.u))+'" class="frk'+(i<3?' top'+(i+1):'')+'"><span class="frk-n">'+(i<3?['🥇','🥈','🥉'][i]:(i+1))+'</span>'+personPh(p,'fph-m')+
+      '<span class="frk-tx"><b>'+esc(p.name)+'</b><small>'+esc([p.position,p.rank].filter(Boolean).join(' · '))+'</small><span class="frk-cats">'+cats+'</span>'+(span?'<small class="frk-span">'+esc(span)+' · เอกสาร '+p.docs+' ไฟล์</small>':'')+'</span>'+
+      '<span class="frk-sc"><b>'+p.score+'</b><small>คะแนน</small><i style="width:'+Math.round(p.score/top*100)+'%"></i></span></a></li>';
+  }).join('')+'</ol>';
+}
+function facCriteria(){
+  var Wt=FAC.weights||{};
+  alert('เกณฑ์การจัดลำดับบุคลากรผลงานโดดเด่น\n\nคะแนน = ผลรวมน้ำหนักของผลงานที่ตีพิมพ์/เสร็จ/เผยแพร่แล้ว\n'+Object.keys(Wt).map(function(k){ return '• '+k+' = '+Wt[k]; }).join('\n')+
+    '\n\nคะแนนเท่ากัน: เรียงตามจำนวนปีที่มีผลงานต่อเนื่อง แล้วตามการอัปเดตล่าสุด\nนับเฉพาะผลงานที่เจ้าของเลือกเผยแพร่ในระบบ');
+}
+/* บุคลากรที่มีผลงาน */
+function facPeople(){
+  var P=FAC.people, q=facNorm(FS.q);
+  var grps={}; P.forEach(function(p){ if(p.group) grps[p.group]=(grps[p.group]||0)+1; });
+  $('facGrp').innerHTML='<button class="chip" aria-pressed="'+(!FS.grp)+'" onclick="FS.grp=\'\';facPeople()">ทั้งหมด '+P.length+'</button>'+Object.keys(grps).map(function(g){ return '<button class="chip" aria-pressed="'+(FS.grp===g)+'" onclick="FS.grp=\''+esc(g)+'\';facPeople()">'+esc(g)+' '+grps[g]+'</button>'; }).join('');
+  var L=P.filter(function(p){ return (!FS.grp||p.group===FS.grp)&&(!q||[p.name,p.position,p.unit,p.rank].some(function(v){ return facNorm(v).indexOf(q)>=0; })); })
+    .sort(function(a,b){ return String(a.name).localeCompare(String(b.name),'th'); });
+  $('facPList').innerHTML=L.length?L.map(function(p){
+    return '<a class="fpc" href="'+esc(personUrl(p.u))+'">'+personPh(p,'fph-p')+'<span class="tx"><b>'+esc(p.name)+'</b><small>'+esc(p.position||'')+'</small><small>'+esc([p.rank,p.unit].filter(Boolean).join(' · '))+'</small>'+
+      '<span class="fpc-n"><b>'+p.total+'</b> ผลงาน · เอกสาร '+p.docs+'</span></span></a>';
+  }).join(''):'<div class="empty">ไม่พบบุคลากรตามคำค้น</div>';
+}
+function facFilter(cat){ FX.cat=cat; FX.n=20; facRepo(); facGo('repo'); }
+/* ค้นหาจากกล่องด้านบน = เริ่มค้นใหม่ทั้งคลัง (ล้างตัวกรองประเภท/ปี/ระดับที่ค้างไว้) */
+function facSearch(v){ FX={q:v,cat:'',year:'',level:'',sort:FX.sort,n:20}; $('facQ').value=v; $('facYear').value=''; $('facLevel').value=''; facRepo(); facGo('repo'); }
+function facGo(sec){ var el=$(sec==='people'?'facPeople':'facRepo'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+
 /* ══════════ วิธีเข้าสู่ระบบผู้ดูแล (แบบเดียวกับ DWMS / DocTrack) ══════════
    domain → /a/macros/msu.ac.th/s/<ID>/exec   ใช้บัญชีโดเมนมหาวิทยาลัย
    choose → หน้าเลือกบัญชีของ Google แล้วไปลิงก์ domain (Chrome ที่ลงชื่อหลายบัญชี)
@@ -1279,7 +1512,8 @@ function openLgn(){
 function closeLgn(){ $('lgnMask').hidden=true; }
 function pickLgn(mode){
   try{ localStorage.setItem('rms_lgn',mode); }catch(e){}
-  refreshAdminLink(); closeLgn();
+  refreshAdminLink();
+if(CONFIG.U){ var bf=$('backFac'); bf.hidden=false; bf.href=location.pathname; } closeLgn();
   window.open(lgnUrl(mode),'_blank','noopener');
 }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!$('lgnMask').hidden) closeLgn(); });
