@@ -568,6 +568,11 @@ body.dlg-open{overflow:hidden}
 .tabs button[aria-selected="true"] .c{background:var(--blue)!important}
 .fpsub button{gap:4px!important}
 
+.fwt{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.fwt div{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.fwt i{width:11px;height:11px;border-radius:3px;flex:none}.fwt span{flex:1;font-size:14px}
+.fwt b{font-family:'Kanit';font-size:17px;color:var(--navy);min-width:34px;text-align:center;background:#EEF4FC;border-radius:8px;padding:1px 8px}
+
 /* โครงร่างระหว่างโหลด */
 .sk{background:linear-gradient(90deg,#E6ECF4 25%,#F1F5FA 37%,#E6ECF4 63%);background-size:400% 100%;animation:shim 1.3s ease infinite;border-radius:6px}
 @keyframes shim{0%{background-position:100% 50%}100%{background-position:0 50%}}
@@ -1483,16 +1488,24 @@ function facRanking(P){
   }).join('')+'</ol>';
 }
 function facCriteria(){
-  var Wt=FAC.weights||{};
-  alert('เกณฑ์การจัดลำดับบุคลากรผลงานโดดเด่น\n\nคะแนน = ผลรวมน้ำหนักของผลงานที่ตีพิมพ์/เสร็จ/เผยแพร่แล้ว\n'+Object.keys(Wt).map(function(k){ return '• '+k+' = '+Wt[k]; }).join('\n')+
-    '\n\nคะแนนเท่ากัน: เรียงตามจำนวนปีที่มีผลงานต่อเนื่อง แล้วตามการอัปเดตล่าสุด\nนับเฉพาะผลงานที่เจ้าของเลือกเผยแพร่ในระบบ');
+  var Wt=FAC.weights||{}, keys=Object.keys(Wt).sort(function(a,b){ return Wt[b]-Wt[a]; });
+  var col=function(k){ return FSER_C[k]||FSER_C[/^Proceedings/.test(k)?'Proceedings':'']||CAT_COLOR[k]||'#5E6B80'; };
+  if($('dlg').hidden) LAST_FOCUS=document.activeElement;
+  $('dlgBox').innerHTML='<div class="dlg-hd"><span class="rule" style="background:var(--navy)"></span><h2 id="dlgTitle">เกณฑ์การจัดลำดับบุคลากรผลงานโดดเด่น</h2><button class="dlg-x" type="button" onclick="closeFac()" aria-label="ปิด">×</button></div><div class="dlg-bd">'+
+    '<section class="dsec"><p style="margin:0 0 12px">คะแนน = ผลรวมน้ำหนักของผลงานที่ <b>สำเร็จแล้ว</b> (ตีพิมพ์ · เสร็จสิ้น · เผยแพร่ · ได้รับรางวัล) ในช่วงปีงบประมาณที่เลือก · คะแนนเท่ากันเรียงตามจำนวนปีที่มีผลงานต่อเนื่อง แล้วตามการอัปเดตล่าสุด</p>'+
+    '<div class="fwt">'+keys.map(function(k){ return '<div><i style="background:'+col(k)+'"></i><span>'+esc(k)+'</span><b>'+Wt[k]+'</b></div>'; }).join('')+'</div>'+
+    '<p class="lead" style="margin:12px 0 0">เกณฑ์นี้กำหนดโดยผู้ดูแลระบบของคณะ และอาจปรับปรุงตามนโยบาย</p></section></div><div class="dlg-ft"><span class="grow"></span><button type="button" onclick="closeFac()">ปิด</button></div>';
+  $('dlg').hidden=false; document.body.classList.add('dlg-open'); $('dlgBox').focus();
 }
 /* บุคลากรที่มีผลงาน */
 function facGo(sec){ var el=$(sec==='people'?'facPeople':'facRepo'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 /* ───── ตัวกรองปีงบประมาณของทั้งแดชบอร์ด ('' = ข้อมูลสะสมทั้งหมด) ───── */
 var FYSEL='', PCUR=[], FLIST=null;
 function facW(){ return FYSEL?FAC.works.filter(function(x){ return fyOf(x)===Number(FYSEL); }):FAC.works; }
-function facWeight(x){ var Wt=FAC.weights||{}; if(x.c==='ผลงานตีพิมพ์') return Wt[x.l]||2; return Wt[x.c]||1; }
+/* ตรงกับเซิร์ฟเวอร์: ใช้ hasOwnProperty เพื่อให้คะแนน 0 = ไม่นับ ทำงานถูกต้อง */
+function facWeight(x){ var Wt=FAC.weights||{}, has=function(k){ return Object.prototype.hasOwnProperty.call(Wt,k); };
+  if(x.c==='ผลงานตีพิมพ์') return has(x.l)?Wt[x.l]:(has('ผลงานตีพิมพ์ระดับอื่น')?Wt['ผลงานตีพิมพ์ระดับอื่น']:2);
+  return has(x.c)?Wt[x.c]:(has('อื่น ๆ')?Wt['อื่น ๆ']:1); }
 /* สถิติบุคลากรจากผลงานชุดที่เลือก (ปีความต่อเนื่องใช้ข้อมูลสะสมจากเซิร์ฟเวอร์) */
 function facPeopleStats(W){
   var o={};
