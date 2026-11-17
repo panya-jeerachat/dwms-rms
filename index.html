@@ -1462,7 +1462,7 @@ function facSeries(W){ return FSER.filter(function(s){ return W.some(function(x)
 /* คลังผลงาน */
 function facMini(x){
   var p=FP[x.o]||{};
-  return '<button class="fmini" style="--c:'+facColor(x)+'" onclick="facOpen(\''+esc(x.id)+'\')">'+personPh(p,'fph')+'<span class="tx"><span class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span></span><b>'+esc(x.t)+'</b><small>'+esc(p.name||x.o)+(x.dd?' · สำเร็จ '+esc(thDD(x.dd)):(x.y?' · พ.ศ. '+x.y:''))+'</small></span></button>';
+  return '<button class="fmini" style="--c:'+facColor(x)+'" onclick="facOpen(\''+esc(x.id)+'\')">'+personPh(p,'fph')+'<span class="tx"><span class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span></span><b>'+esc(x.t)+'</b><small>'+esc(p.name||x.o)+(x.dd?' · 📅 '+esc(thDD(x.dd)):(x.y?' · พ.ศ. '+x.y:''))+'</small></span></button>';
 }
 /* คลังผลงาน */
 function facRow(x){
@@ -1543,7 +1543,7 @@ function fyLabel(){ return FYSEL?'ปีงบประมาณ '+FYSEL:'ข้
 
 /* เรียงตาม “ช่วงเวลาที่สำเร็จ” ใหม่ก่อน (ตรงกับเซิร์ฟเวอร์): ปีที่ตีพิมพ์/เผยแพร่ → ปีงบประมาณ → วันที่เผยแพร่ล่าสุดจากหลักฐาน → วันที่แก้ไข */
 function thDD(d){ var x=new Date(String(d)+'T00:00:00'); return d&&!isNaN(x)?x.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'}):''; }
-function ddLabel(cat){ return cat==='ผลงานตีพิมพ์'?'วันที่ตีพิมพ์เผยแพร่':(cat==='รางวัล'?'วันที่ได้รับรางวัล':(cat==='คู่มือปฏิบัติงาน'||cat==='ผลงานเชิงวิเคราะห์'?'วันที่เผยแพร่':(cat==='การนำเสนอ'?'วันที่นำเสนอ':'วันที่เสร็จสิ้น'))); }
+function ddLabel(cat){ return cat==='ผลงานตีพิมพ์'||cat==='การนำเสนอ'?'วันที่ตอบรับการตีพิมพ์':(cat==='รางวัล'||cat==='โครงการวิจัย'?'วันที่รับรองผล':'วันที่ตอบรับการเผยแพร่'); }   /* ตามหลักฐาน: หนังสือตอบรับ/ใบประกาศ */
 /* เรียงตาม “วันที่สำเร็จ” ใหม่ก่อน (ตรงกับเซิร์ฟเวอร์) → ปีที่ตีพิมพ์/เผยแพร่/ปีงบประมาณ → วันที่เผยแพร่จากหลักฐาน → วันที่แก้ไข */
 function facCmp(a,b){
   var da=a.dd||a.ed||'', db=b.dd||b.ed||'';
