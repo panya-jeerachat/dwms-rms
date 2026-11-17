@@ -49,16 +49,23 @@ window.RMS_REQ = (function(){
 })();
 if (window.RMS_REQ) window.RMS_REQ.catch(function(){});   /* กันข้อความ unhandled ใน console */
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- ฟอนต์มอน้ำชี (Mornamchi) ฟอนต์ประจำมหาวิทยาลัยมหาสารคาม — ใช้ไฟล์กลางบน eng.msu.ac.th (ไม่คัดลอกไฟล์ฟอนต์มาไว้ที่ระบบนี้) -->
+<link rel="preload" href="https://eng.msu.ac.th/fonts/mornamchi/Mornamchi-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://eng.msu.ac.th/fonts/mornamchi/mornamchi.css">
+<!-- ฟอนต์สำรองเมื่อเปิดนอกโดเมน msu.ac.th (ไฟล์มอน้ำชีอนุญาตเฉพาะ msu.ac.th) -->
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
+/* ฟอนต์ทั้งหน้า: มอน้ำชี (Light 300 / Regular 400 / Bold 700) → สำรอง Noto Sans Thai / Sarabun */
+:root{--rms-font:"Mornamchi","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif}
+html,body,button,input,select,textarea{font-family:var(--rms-font);font-synthesis:none}
 :root{
   --navy:#0D2B5C; --blue:#1565C0; --blue-2:#E8F0FB; --paper:#F4F7FB; --ink:#172234; --mute:#5E6B80; --line:#D9E1EC; --white:#fff;
   --t1:#0B7A5B; --t2:#1565C0; --sc:#6B3FA0; --pr:#A4521B; --oth:#5E6B80;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:clip}
-body{font-family:'Sarabun',Tahoma,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.6}
-h1,h2,h3,.num{font-family:'Kanit','Sarabun',sans-serif;font-weight:500;line-height:1.3}
+body{font-family:var(--rms-font);background:var(--paper);color:var(--ink);font-size:16px;line-height:1.6}
+h1,h2,h3,.num{font-family:var(--rms-font);font-weight:500;line-height:1.3}
 a{color:var(--blue)}
 button{font:inherit;cursor:pointer}
 :focus-visible{outline:3px solid #7FB0F0;outline-offset:2px;border-radius:4px}
@@ -73,7 +80,7 @@ img{max-width:100%}
 .top img{height:44px;width:auto}
 .top .sep{width:1px;height:34px;background:var(--line)}
 .top .name{flex:1;min-width:0}
-.top .name b{font-family:'Kanit';font-weight:500;font-size:16px;display:block}
+.top .name b{font-family:var(--rms-font);font-weight:500;font-size:16px;display:block}
 .top .name span{font-size:12.5px;color:var(--mute)}
 .top .act{display:flex;gap:8px}
 .top .act button,.top .act a{border:1px solid var(--line);background:var(--white);color:var(--ink);border-radius:8px;padding:7px 12px;font-size:14px;text-decoration:none}
@@ -100,7 +107,7 @@ img{max-width:100%}
 .me{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:sticky;top:84px}
 @media(max-width:980px){.me{position:static}}
 .me-hd{padding:24px 22px 18px;text-align:center;border-bottom:1px solid var(--line)}
-.ph{width:118px;height:118px;border-radius:50%;margin:0 auto 12px;object-fit:cover;border:4px solid var(--blue-2);background:var(--blue-2);display:grid;place-items:center;font-family:'Kanit';font-size:44px;color:var(--navy)}
+.ph{width:118px;height:118px;border-radius:50%;margin:0 auto 12px;object-fit:cover;border:4px solid var(--blue-2);background:var(--blue-2);display:grid;place-items:center;font-family:var(--rms-font);font-size:44px;color:var(--navy)}
 .me h1{font-size:21px;color:var(--navy)}
 .me .en{font-size:13.5px;color:var(--mute)}
 .me .pos{margin-top:8px;font-size:15px}
@@ -108,13 +115,13 @@ img{max-width:100%}
 .me .unit{font-size:13.5px;color:var(--mute);margin-top:6px}
 
 .strip-box{padding:16px 22px;border-bottom:1px solid var(--line)}
-.strip-box h2{font-size:14px;color:var(--mute);font-family:'Sarabun';font-weight:600;margin-bottom:8px}
+.strip-box h2{font-size:14px;color:var(--mute);font-family:var(--rms-font);font-weight:600;margin-bottom:8px}
 .strip{display:flex;gap:4px;flex-wrap:wrap}
 .blk{width:22px;height:22px;border-radius:4px;border:2px solid currentColor;background:currentColor;display:inline-block}
 .blk.wip{background:transparent;border-style:dashed}
 .blk.t1{color:var(--t1)}.blk.t2{color:var(--t2)}.blk.sc{color:var(--sc)}.blk.pr{color:var(--pr)}.blk.oth{color:var(--oth)}
 .strip-sum{font-size:14px;margin-top:8px}
-.strip-sum b{font-family:'Kanit';font-weight:500;font-size:18px}
+.strip-sum b{font-family:var(--rms-font);font-weight:500;font-size:18px}
 
 .me-bd{padding:16px 22px 20px;font-size:14.5px}
 .me-bd dt{font-size:12.5px;color:var(--mute);margin-top:10px}
@@ -145,7 +152,7 @@ img{max-width:100%}
 .ledger th,.ledger td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}
 .ledger th:first-child,.ledger td:first-child{text-align:left}
 .ledger thead th{font-size:13px;color:var(--mute);font-weight:600;background:#F7F9FC}
-.ledger td.n{font-family:'Kanit';font-size:17px}
+.ledger td.n{font-family:var(--rms-font);font-size:17px}
 .ledger tfoot td{font-weight:700;border-bottom:0;border-top:2px solid var(--navy)}
 .ledger .dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:-1px}
 .tbl{overflow-x:auto}
@@ -181,7 +188,7 @@ img{max-width:100%}
 .badges .lv.t1{background:var(--t1)}.badges .lv.t2{background:var(--t2)}.badges .lv.sc{background:var(--sc)}.badges .lv.pr{background:var(--pr)}
 .badges .st.ok{background:#E3F4EE;color:var(--t1)}
 .badges .st.wip{background:#FFF4DE;color:#8A5A00}
-.it h3{max-width:90ch;font-size:16.5px;font-family:'Sarabun';font-weight:700;line-height:1.45}
+.it h3{max-width:90ch;font-size:16.5px;font-family:var(--rms-font);font-weight:700;line-height:1.45}
 .it .en{color:var(--mute);font-size:14.5px;font-style:italic}
 .it .au{font-size:14.5px;margin-top:3px}
 .it .src{font-size:14.5px;color:var(--mute)}
@@ -218,15 +225,15 @@ body.dlg-open{overflow:hidden}
 .dlg-box{background:#fff;border-radius:16px;width:min(980px,100%);box-shadow:0 30px 80px rgba(13,43,92,.3);position:relative;outline:none}
 .dlg-hd{padding:22px 64px 18px 26px;border-bottom:1px solid var(--line);position:relative}
 .dlg-hd .rule{position:absolute;left:0;top:22px;bottom:18px;width:5px;border-radius:0 4px 4px 0}
-.dlg-hd h2{font-size:21px;color:var(--ink);font-family:'Sarabun';font-weight:700;line-height:1.45;margin-top:6px}
+.dlg-hd h2{font-size:21px;color:var(--ink);font-family:var(--rms-font);font-weight:700;line-height:1.45;margin-top:6px}
 .dlg-hd .en{color:var(--mute);font-style:italic;margin-top:2px}
 .dlg-x{position:absolute;right:16px;top:16px;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:22px;line-height:1;color:var(--mute)}
 .dlg-x:hover{color:var(--ink);border-color:var(--ink)}
 .dlg-bd{padding:6px 26px 10px}
 .dsec{padding:18px 0;border-bottom:1px solid var(--line)}
 .dsec:last-child{border-bottom:0}
-.dsec h3{font-family:'Kanit';font-weight:500;font-size:16px;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.dsec h3 .n{font-family:'Sarabun';font-size:12.5px;color:var(--mute);font-weight:600;background:var(--paper);border-radius:10px;padding:0 8px}
+.dsec h3{font-family:var(--rms-font);font-weight:500;font-size:16px;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.dsec h3 .n{font-family:var(--rms-font);font-size:12.5px;color:var(--mute);font-weight:600;background:var(--paper);border-radius:10px;padding:0 8px}
 .kvg{display:grid;grid-template-columns:190px 1fr;gap:7px 16px;font-size:15px}
 .kvg dt{color:var(--mute)}
 .kvg dd{min-width:0;word-break:break-word}
@@ -283,14 +290,14 @@ body.dlg-open{overflow:hidden}
 .hk:after{content:"";position:absolute;right:30px;bottom:-60px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
 .hk:hover{box-shadow:0 18px 34px -12px rgba(13,43,92,.6),inset 0 1px 0 rgba(255,255,255,.3)}
 .hk .hl{font-size:14px;opacity:.92;position:relative}
-.hk .hn{font-family:'Kanit';font-weight:600;font-size:40px;line-height:1.1;position:relative;text-shadow:0 2px 10px rgba(0,0,0,.18)}
+.hk .hn{font-family:var(--rms-font);font-weight:600;font-size:40px;line-height:1.1;position:relative;text-shadow:0 2px 10px rgba(0,0,0,.18)}
 .hk .hn small{font-size:16px;font-weight:500;margin-left:6px;opacity:.9}
 .hk .hs{font-size:13px;opacity:.9;position:relative}
 .hk .hgo{font-size:12.5px;margin-top:8px;opacity:.85;position:relative;font-weight:600}
-.cnt{font-family:'Sarabun';font-size:13px;font-weight:600;background:var(--paper);color:var(--mute);border-radius:10px;padding:1px 9px;vertical-align:middle}
-.nb{border:0;background:none;font:inherit;font-family:'Kanit';font-size:17px;color:var(--blue);cursor:pointer;padding:2px 10px;border-radius:8px;text-decoration:underline;text-decoration-color:rgba(21,101,192,.35);text-underline-offset:3px}
+.cnt{font-family:var(--rms-font);font-size:13px;font-weight:600;background:var(--paper);color:var(--mute);border-radius:10px;padding:1px 9px;vertical-align:middle}
+.nb{border:0;background:none;font:inherit;font-family:var(--rms-font);font-size:17px;color:var(--blue);cursor:pointer;padding:2px 10px;border-radius:8px;text-decoration:underline;text-decoration-color:rgba(21,101,192,.35);text-underline-offset:3px}
 .nb:hover{background:var(--blue-2);text-decoration-color:var(--blue)}
-.nz{color:#B7C2D3;font-family:'Kanit';font-size:17px;padding:2px 10px}
+.nz{color:#B7C2D3;font-family:var(--rms-font);font-size:17px;padding:2px 10px}
 .lnk{border:0;background:none;font:inherit;color:var(--ink);cursor:pointer;padding:0;text-align:left;display:inline-flex;align-items:center}
 .lnk:hover{color:var(--blue);text-decoration:underline}
 .rd-ft .lnk{color:var(--blue)}
@@ -299,7 +306,7 @@ body.dlg-open{overflow:hidden}
 .rd-hd{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .rd-ring{--p:0;--c:#1565C0;width:92px;height:92px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),#E6ECF4 0);position:relative;box-shadow:0 8px 20px -10px var(--c)}
 .rd-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}
-.rd-ring b{position:relative;font-family:'Kanit';font-size:22px;color:var(--c)}
+.rd-ring b{position:relative;font-family:var(--rms-font);font-size:22px;color:var(--c)}
 .rd-t{flex:1;min-width:220px}
 .rd-k{font-size:13px;color:var(--mute);font-weight:600}
 .rd-t h2{font-size:21px;color:var(--navy);margin:2px 0}
@@ -318,7 +325,7 @@ body.dlg-open{overflow:hidden}
 .rqh>div{flex:1;min-width:0}
 .rqn{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#FFF1F0;color:#B3261E;font-weight:700;font-size:13px;flex:none}
 .rqc.met .rqn{background:var(--t1);color:#fff}
-.rqc-n{font-family:'Kanit';font-size:18px;color:var(--navy);white-space:nowrap}
+.rqc-n{font-family:var(--rms-font);font-size:18px;color:var(--navy);white-space:nowrap}
 .rqbar{height:8px;border-radius:6px;background:#EEF2F7;margin:10px 0 8px;overflow:hidden}
 .rqbar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#F59E0B,#EF4444)}
 .rqc.met .rqbar i{background:linear-gradient(90deg,#10B981,#0B7A5B)}
@@ -351,7 +358,7 @@ body.dlg-open{overflow:hidden}
 .dn{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
 .ring{width:190px;height:190px;border-radius:50%;flex:none;position:relative;box-shadow:0 14px 26px -14px rgba(13,43,92,.5),inset 0 -6px 12px rgba(0,0,0,.12)}
 .ring .hole{position:absolute;inset:34px;border-radius:50%;background:#fff;display:grid;place-content:center;text-align:center;box-shadow:inset 0 4px 10px rgba(13,43,92,.12)}
-.ring .hole b{font-family:'Kanit';font-size:34px;color:var(--navy);line-height:1}
+.ring .hole b{font-family:var(--rms-font);font-size:34px;color:var(--navy);line-height:1}
 .ring .hole small{color:var(--mute);font-size:13px}
 .dl{flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px}
 .dli{display:grid;grid-template-columns:16px minmax(120px,1.2fr) 2fr 34px 60px;gap:10px;align-items:center;border:1px solid transparent;background:none;border-radius:10px;padding:7px 8px;font:inherit;font-size:14.5px;cursor:pointer;text-align:left;color:var(--ink)}
@@ -359,12 +366,12 @@ body.dlg-open{overflow:hidden}
 .dli .sw2{width:14px;height:14px;border-radius:4px;background:var(--c)}
 .dli .bar{height:8px;background:#EEF2F7;border-radius:6px;overflow:hidden}
 .dli .bar i{display:block;height:100%;background:var(--c);border-radius:6px}
-.dli b{font-family:'Kanit';font-weight:500;text-align:right}
+.dli b{font-family:var(--rms-font);font-weight:500;text-align:right}
 .dli small{color:var(--mute);font-size:12px}
 @media(max-width:600px){.dli{grid-template-columns:16px 1fr 34px}.dli .bar,.dli small{display:none}}
 /* หมวดในภาพรวม */
 .catsec{margin-top:18px}
-.catsec h3{font-family:'Kanit';font-weight:500;font-size:17px;color:var(--ink);display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:2px solid var(--c)}
+.catsec h3{font-family:var(--rms-font);font-weight:500;font-size:17px;color:var(--ink);display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:2px solid var(--c)}
 .catsec .cd{width:12px;height:12px;border-radius:3px;background:var(--c)}
 .badges .used{background:#EEE;color:#555}
 .badges .inuse{background:#EEF2FF;color:#4338CA}
@@ -403,14 +410,14 @@ body.dlg-open{overflow:hidden}
 .cv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:20px;align-items:start}
 .cv-col{display:flex;flex-direction:column;gap:20px}
 .cv-card{border:1px solid var(--line);border-radius:16px;padding:20px 22px;background:#fff}
-.cv-card h3{font-family:'Kanit';font-weight:500;font-size:17px;color:var(--ink);display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cv-card h3{font-family:var(--rms-font);font-weight:500;font-size:17px;color:var(--ink);display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .cv-card .ci{width:12px;height:12px;border-radius:4px;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 15%,transparent)}
 .tl{list-style:none;position:relative;margin:0;padding:0}
 .tl li{position:relative;display:grid;grid-template-columns:104px 1fr;gap:14px;padding:10px 0 10px 18px}
 .tl li:before{content:"";position:absolute;left:0;top:17px;width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 3px var(--blue-2)}
 .tl li:after{content:"";position:absolute;left:4px;top:30px;bottom:-12px;width:1px;background:var(--line)}
 .tl li:last-child:after{display:none}
-.tl-y{font-family:'Kanit';font-size:14px;color:var(--navy);font-weight:500;white-space:nowrap}
+.tl-y{font-family:var(--rms-font);font-size:14px;color:var(--navy);font-weight:500;white-space:nowrap}
 .tl-t{font-size:15px;line-height:1.7;color:#26354D}
 .cv-now{background:var(--navy);color:#fff;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:600;margin-left:4px}
 @media(max-width:640px){.tl li{grid-template-columns:1fr;gap:2px}.cv .cv-bio,.cv-card{padding:16px}}
@@ -421,7 +428,7 @@ body.dlg-open{overflow:hidden}
 .lgn-mask{position:fixed;inset:0;z-index:70;background:rgba(13,43,92,.45);display:grid;place-items:center;padding:16px}
 .lgn-mask[hidden]{display:none!important}
 .lgn-box{position:relative;background:#fff;border-radius:18px;width:min(460px,100%);padding:22px 22px 18px;box-shadow:0 30px 80px rgba(13,43,92,.35)}
-.lgn-box h3{font-family:'Kanit';font-weight:600;font-size:19px;color:var(--navy);margin-bottom:6px}
+.lgn-box h3{font-family:var(--rms-font);font-weight:600;font-size:19px;color:var(--navy);margin-bottom:6px}
 .lgn-box .lead{font-size:13.5px;color:var(--mute);margin-bottom:14px;line-height:1.6}
 .lgn-x{position:absolute;right:14px;top:12px;border:0;background:none;font-size:24px;color:var(--mute);cursor:pointer}
 .lgn-opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;font:inherit}
@@ -434,18 +441,18 @@ body.dlg-open{overflow:hidden}
 /* ───── หน้าคลังผลงานของคณะ ───── */
 .fac{width:100%;padding:20px clamp(12px,2vw,32px) 36px}
 .fhero{border-radius:22px;background:radial-gradient(900px 300px at 85% 0%,rgba(255,255,255,.14),transparent 60%),linear-gradient(120deg,#0D2B5C 0%,#1565C0 55%,#4F46E5 100%);color:#fff;padding:34px clamp(20px,3vw,44px);margin-bottom:18px;box-shadow:0 20px 50px -24px rgba(13,43,92,.7)}
-.fhero h1{font-family:'Kanit';font-weight:600;font-size:clamp(24px,2.6vw,34px);line-height:1.25}
+.fhero h1{font-family:var(--rms-font);font-weight:600;font-size:clamp(24px,2.6vw,34px);line-height:1.25}
 .fhero h1 span{font-weight:400;font-size:.62em;opacity:.9}
 .fkpi{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 .fgrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:18px;margin-bottom:18px}
 .fcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px}
 .fgrid2 .fcard{margin-bottom:0}
-.fcard h2{font-family:'Kanit';font-weight:500;font-size:20px;color:var(--navy)}
+.fcard h2{font-family:var(--rms-font);font-weight:500;font-size:20px;color:var(--navy)}
 .fcard .lead{color:var(--mute);font-size:14px;margin:2px 0 14px}
 .fbars{display:flex;align-items:flex-end;gap:14px;min-height:370px;padding-top:6px;overflow-x:auto;background:linear-gradient(var(--ink),var(--ink)) left bottom 28px/100% 2px no-repeat}
 .fbar{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;cursor:pointer;min-width:52px;flex:1;max-width:110px;padding:0}
 .fbar:hover .fstack{filter:brightness(1.08);transform:translateY(-2px)}
-.fbn{font-family:'Kanit';font-size:14px;color:var(--navy)}
+.fbn{font-family:var(--rms-font);font-size:14px;color:var(--navy)}
 .fstack{display:flex;flex-direction:column-reverse;width:70%;border-radius:8px 8px 0 0;overflow:hidden;box-shadow:0 8px 14px -8px rgba(13,43,92,.45);transition:transform .15s}
 .fstack i{display:block;min-height:3px}
 .fby{font-size:13px;color:var(--ink);height:28px;line-height:28px;font-weight:600}
@@ -455,7 +462,7 @@ body.dlg-open{overflow:hidden}
 .fmini:hover{border-color:var(--c);box-shadow:0 4px 12px -6px rgba(13,43,92,.25)}
 .fmini .tx{flex:1;min-width:0}.fmini b{display:block;font-size:14px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fmini small{color:var(--mute);font-size:12.5px}
 .fmini .badges{margin-bottom:2px}
-.fph,.fph-s,.fph-m,.fph-l,.fph-p{object-fit:cover;flex:none;background:#E8EEF6;display:inline-grid;place-items:center;font-family:'Kanit';color:var(--navy)}
+.fph,.fph-s,.fph-m,.fph-l,.fph-p{object-fit:cover;flex:none;background:#E8EEF6;display:inline-grid;place-items:center;font-family:var(--rms-font);color:var(--navy)}
 .fph{width:40px;height:46px;border-radius:9px}.fph-s{width:24px;height:28px;border-radius:6px;font-size:12px}.fph-m{width:52px;height:60px;border-radius:11px;font-size:18px}
 .fph-l{width:64px;height:76px;border-radius:12px;font-size:22px}.fph-p{width:64px;height:76px;border-radius:12px;font-size:22px}
 .frepo-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
@@ -466,7 +473,7 @@ body.dlg-open{overflow:hidden}
 .frow{display:grid;grid-template-columns:5px 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
 .frow-bar{border-radius:3px;background:var(--c)}
 .frow-bar.wip{background:repeating-linear-gradient(180deg,var(--c) 0 6px,transparent 6px 10px)}
-.frow h3{font-size:16px;font-family:'Sarabun';font-weight:700;line-height:1.45;margin-top:4px}
+.frow h3{font-size:16px;font-family:var(--rms-font);font-weight:700;line-height:1.45;margin-top:4px}
 .frow h3 a{color:inherit;text-decoration:none}.frow h3 a:hover{color:var(--blue);text-decoration:underline}
 .frow .en{color:var(--mute);font-style:italic;font-size:14px}
 .frow .src{font-size:14px;color:var(--mute)}
@@ -483,19 +490,19 @@ body.dlg-open{overflow:hidden}
 .frk{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 14px;text-decoration:none;color:var(--ink);background:#fff}
 .frk:hover{border-color:var(--blue);box-shadow:0 6px 16px -10px rgba(13,43,92,.35)}
 .frk.top1{background:linear-gradient(90deg,#FFF8E1,#fff);border-color:#F5D27A}.frk.top2{background:linear-gradient(90deg,#F4F6F9,#fff)}.frk.top3{background:linear-gradient(90deg,#FBEFE6,#fff)}
-.frk-n{width:32px;text-align:center;font-family:'Kanit';font-size:20px;color:var(--mute);flex:none}
+.frk-n{width:32px;text-align:center;font-family:var(--rms-font);font-size:20px;color:var(--mute);flex:none}
 .frk-tx{flex:1;min-width:0}.frk-tx b{display:block;font-size:15px}.frk-tx small{display:block;color:var(--mute);font-size:12.5px}
 .frk-cats{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 2px}
 .frk-cats span{font-size:11px;font-weight:700;border-radius:5px;padding:1px 7px;background:color-mix(in srgb,var(--c) 12%,#fff);color:var(--c)}
 .frk-span{font-size:12px!important}
 .frk-sc{width:86px;flex:none;text-align:center;position:relative;padding-bottom:6px}
-.frk-sc b{display:block;font-family:'Kanit';font-size:24px;color:var(--navy);line-height:1}.frk-sc small{font-size:11.5px;color:var(--mute)}
+.frk-sc b{display:block;font-family:var(--rms-font);font-size:24px;color:var(--navy);line-height:1}.frk-sc small{font-size:11.5px;color:var(--mute)}
 .frk-sc i{position:absolute;left:8px;bottom:0;height:4px;border-radius:3px;background:linear-gradient(90deg,#1565C0,#4F46E5)}
 .fpeople{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 .fpc{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-decoration:none;color:var(--ink);background:#fff}
 .fpc:hover{border-color:var(--blue);box-shadow:0 6px 16px -10px rgba(13,43,92,.35)}
 .fpc .tx{flex:1;min-width:0}.fpc b{display:block;font-size:14.5px}.fpc small{display:block;color:var(--mute);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fpc-n{display:block;font-size:12.5px;color:var(--blue);margin-top:3px}.fpc-n b{display:inline;font-family:'Kanit'}
+.fpc-n{display:block;font-size:12.5px;color:var(--blue);margin-top:3px}.fpc-n b{display:inline;font-family:var(--rms-font)}
 .fowner{display:flex;gap:14px;align-items:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
 .fowner:hover{border-color:var(--blue)}
 .fowner b{display:block;font-size:16px}.fowner small{display:block;color:var(--mute);font-size:13px}.fowner em{font-style:normal;color:var(--blue);font-size:13px;font-weight:600}
@@ -510,7 +517,7 @@ body.dlg-open{overflow:hidden}
 .b3wrap{overflow-x:auto;padding:16px 12px 0 4px}
 .b3cols{display:flex;align-items:flex-end;gap:22px;min-height:330px;background:linear-gradient(var(--ink),var(--ink)) left bottom 28px/100% 2px no-repeat}
 .b3col{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;cursor:pointer;min-width:56px;flex:1;max-width:96px;padding:0}
-.b3n{font-family:'Kanit';font-size:15px;color:var(--navy);margin-bottom:10px}
+.b3n{font-family:var(--rms-font);font-size:15px;color:var(--navy);margin-bottom:10px}
 .b3{position:relative;display:flex;flex-direction:column-reverse;width:62%;transition:transform .15s}
 .b3col:hover .b3{transform:translateY(-3px)}
 .b3 i{display:block;background:var(--c);position:relative;min-height:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
@@ -533,7 +540,7 @@ body.dlg-open{overflow:hidden}
 .fyb button{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:20px;padding:6px 13px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
 .fyb button:hover{background:rgba(255,255,255,.22)}
 .fyb button.on{background:#fff;color:var(--navy);border-color:#fff}
-.fcard h2 small{font-family:'Sarabun';font-weight:600;font-size:13px;color:var(--blue)}
+.fcard h2 small{font-family:var(--rms-font);font-weight:600;font-size:13px;color:var(--blue)}
 .fbal{align-items:stretch}
 .fbal .fcol{display:flex;flex-direction:column}
 .fbal .fcol .flatest{flex:1;min-height:0;overflow:auto;max-height:820px;padding-right:4px}
@@ -545,14 +552,14 @@ body.dlg-open{overflow:hidden}
 .fmx tbody tr.on td{background:#EEF4FC}
 .fpstat{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .fpstat div{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#F8FAFD}
-.fpstat b{display:block;font-family:'Kanit';font-size:24px;color:var(--navy)}.fpstat small{font-size:12.5px;color:var(--mute)}
+.fpstat b{display:block;font-family:var(--rms-font);font-size:24px;color:var(--navy)}.fpstat small{font-size:12.5px;color:var(--mute)}
 @media(max-width:640px){.fpstat{grid-template-columns:1fr 1fr}}
 .fpsub{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .fpsub button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:20px;padding:4px 11px;font:inherit;font-size:13px;cursor:pointer}
 .fpsub i{width:9px;height:9px;border-radius:3px;background:var(--c)}
 .fpbars{display:flex;align-items:flex-end;gap:8px;height:116px;border-bottom:1px solid var(--line)}
 .fpbars button{flex:1;max-width:60px;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;cursor:pointer;padding:0}
-.fpbars .v{font-size:12px;color:var(--ink);font-family:'Kanit'}.fpbars .b{width:70%;border-radius:5px 5px 0 0;min-height:2px}.fpbars .y{font-size:11.5px;color:var(--mute)}
+.fpbars .v{font-size:12px;color:var(--ink);font-family:var(--rms-font)}.fpbars .b{width:70%;border-radius:5px 5px 0 0;min-height:2px}.fpbars .y{font-size:11.5px;color:var(--mute)}
 .fpbars button.on .y{color:#fff;background:var(--navy);border-radius:6px;padding:0 6px}
 .fptop{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
 .fptop a{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:7px 10px;text-decoration:none;color:var(--ink)}
@@ -561,17 +568,17 @@ body.dlg-open{overflow:hidden}
 
 /* ───── ป้ายจำนวน (มาตรฐานเดียวทั้งหน้า): พื้นทึบ ตัวขาว แยกจากชื่อชัดเจน · สีตามประเภท (--cc) ───── */
 .cn{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:21px;padding:0 8px;margin-left:8px;border-radius:999px;
-  background:var(--cc,#0D2B5C);color:#fff;font-family:'Kanit';font-size:12.5px;font-weight:500;line-height:1;vertical-align:middle;box-shadow:0 1px 2px rgba(13,43,92,.18)}
+  background:var(--cc,#0D2B5C);color:#fff;font-family:var(--rms-font);font-size:12.5px;font-weight:500;line-height:1;vertical-align:middle;box-shadow:0 1px 2px rgba(13,43,92,.18)}
 .chip[aria-pressed="true"] .cn,.fpsub button.on .cn{background:#fff;color:var(--cc,#0D2B5C);box-shadow:none}
 .chip{display:inline-flex;align-items:center}
-.cnt,.dsec h3 .n,.tabs button .c{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:21px;padding:0 8px;border-radius:999px;background:#0D2B5C!important;color:#fff!important;font-family:'Kanit'!important;font-size:12.5px!important;font-weight:500!important;line-height:1}
+.cnt,.dsec h3 .n,.tabs button .c{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:21px;padding:0 8px;border-radius:999px;background:#0D2B5C!important;color:#fff!important;font-family:var(--rms-font)!important;font-size:12.5px!important;font-weight:500!important;line-height:1}
 .tabs button[aria-selected="true"] .c{background:var(--blue)!important}
 .fpsub button{gap:4px!important}
 
 .fwt{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
 .fwt div{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
 .fwt i{width:11px;height:11px;border-radius:3px;flex:none}.fwt span{flex:1;font-size:14px}
-.fwt b{font-family:'Kanit';font-size:17px;color:var(--navy);min-width:34px;text-align:center;background:#EEF4FC;border-radius:8px;padding:1px 8px}
+.fwt b{font-family:var(--rms-font);font-size:17px;color:var(--navy);min-width:34px;text-align:center;background:#EEF4FC;border-radius:8px;padding:1px 8px}
 
 /* โครงร่างระหว่างโหลด */
 .sk{background:linear-gradient(90deg,#E6ECF4 25%,#F1F5FA 37%,#E6ECF4 63%);background-size:400% 100%;animation:shim 1.3s ease infinite;border-radius:6px}
@@ -622,7 +629,7 @@ body.dlg-open{overflow:hidden}
 
 <header class="top">
   <div class="top-in">
-    <img src="https://eng.msu.ac.th/rms/logo.png" alt="คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม" onerror="this.onerror=function(){this.style.display='none'};this.src='https://eng.msu.ac.th/dwms/logo.png'">
+    <img id="brandLogo" src="https://eng.msu.ac.th/rms/logo.png" alt="คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม" onerror="this.onerror=function(){this.style.display='none'};this.src='https://eng.msu.ac.th/dwms/logo.png'">
     <div class="sep"></div>
     <div class="name"><b>ผลงานวิชาการและวิจัย</b><span>คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</span></div>
     <div class="act">
@@ -762,7 +769,17 @@ function failed(){
 function retry(){ var n=$('skNote'); if(n) n.textContent='กำลังลองใหม่…'; load(true); }
 
 /* ───── สร้างหน้า ───── */
+/* ชื่อระบบ/หน่วยงาน/โลโก้ จากการตั้งค่าของผู้ดูแลระบบ (ไม่ต้องแก้ไฟล์นี้) */
+var BRAND={title:'คลังผลงานวิชาการและวิจัย',org:'คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม',logo:''};
+function applyBrand(b,faculty){
+  if(b) for(var k in b) if(b[k]) BRAND[k]=b[k];
+  var img=$('brandLogo'); if(img&&BRAND.logo&&img.getAttribute('src')!==BRAND.logo){ img.src=BRAND.logo; } if(img) img.alt=BRAND.org;
+  var nb=document.querySelector('.top .name b'), ns=document.querySelector('.top .name span');
+  if(faculty){ nb.textContent=BRAND.title; ns.textContent='บุคลากร'+BRAND.org; document.title=BRAND.title+' · '+BRAND.org; }
+  else ns.textContent=BRAND.org;
+}
 function render(j){
+  applyBrand(j.brand,j.mode==='faculty');
   if(j.mode==='faculty'){ renderFaculty(j); return; }
   D=j; D.works=(D.works||[]).slice();
   var names=String(D.profile.owner_names||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
@@ -1488,13 +1505,13 @@ function facRanking(P){
   }).join('')+'</ol>';
 }
 function facCriteria(){
-  var Wt=FAC.weights||{}, keys=Object.keys(Wt).sort(function(a,b){ return Wt[b]-Wt[a]; });
-  var col=function(k){ return FSER_C[k]||FSER_C[/^Proceedings/.test(k)?'Proceedings':'']||CAT_COLOR[k]||'#5E6B80'; };
+  var R=FAC.rules||[], on=R.filter(function(r){ return r.on!==false; }).sort(function(a,b){ return b.w-a.w; }), off=R.filter(function(r){ return r.on===false; });
+  var col=function(r){ return r.cat==='ผลงานตีพิมพ์'?(LEVEL_CLS[r.level]?LEVEL_COLOR[LEVEL_CLS[r.level]]:'#3B82F6'):(CAT_COLOR[r.cat]||'#5E6B80'); };
   if($('dlg').hidden) LAST_FOCUS=document.activeElement;
   $('dlgBox').innerHTML='<div class="dlg-hd"><span class="rule" style="background:var(--navy)"></span><h2 id="dlgTitle">เกณฑ์การจัดลำดับบุคลากรผลงานโดดเด่น</h2><button class="dlg-x" type="button" onclick="closeFac()" aria-label="ปิด">×</button></div><div class="dlg-bd">'+
-    '<section class="dsec"><p style="margin:0 0 12px">คะแนน = ผลรวมน้ำหนักของผลงานที่ <b>สำเร็จแล้ว</b> (ตีพิมพ์ · เสร็จสิ้น · เผยแพร่ · ได้รับรางวัล) ในช่วงปีงบประมาณที่เลือก · คะแนนเท่ากันเรียงตามจำนวนปีที่มีผลงานต่อเนื่อง แล้วตามการอัปเดตล่าสุด</p>'+
-    '<div class="fwt">'+keys.map(function(k){ return '<div><i style="background:'+col(k)+'"></i><span>'+esc(k)+'</span><b>'+Wt[k]+'</b></div>'; }).join('')+'</div>'+
-    '<p class="lead" style="margin:12px 0 0"><b>ไม่นับคะแนน:</b> โครงการวิจัย · การนำเสนอ · ผลงานประเภทอื่น (ไม่ใช้ประกอบการขอกำหนดตำแหน่ง แต่ยังเปิดศึกษาได้ในคลังผลงาน) · เกณฑ์นี้กำหนดโดยผู้ดูแลระบบของคณะ และอาจปรับปรุงตามนโยบาย</p></section></div><div class="dlg-ft"><span class="grow"></span><button type="button" onclick="closeFac()">ปิด</button></div>';
+    '<section class="dsec"><p style="margin:0 0 12px">คะแนน = ผลรวมคะแนนของผลงานที่ <b>สำเร็จแล้ว</b> (ตีพิมพ์ · เสร็จสิ้น · เผยแพร่ · ได้รับรางวัล) ในช่วงปีงบประมาณที่เลือก · คะแนนเท่ากันเรียงตามจำนวนปีที่มีผลงานต่อเนื่อง แล้วตามการอัปเดตล่าสุด</p>'+
+    '<div class="fwt">'+on.map(function(r){ return '<div><i style="background:'+col(r)+'"></i><span>'+esc(r.label)+(r.level?'':'<small> (ทุกระดับ)</small>')+'</span><b>'+r.w+'</b></div>'; }).join('')+'</div>'+
+    '<p class="lead" style="margin:12px 0 0"><b>ไม่นับคะแนน:</b> '+(off.length?off.map(function(r){ return esc(r.label); }).join(' · ')+' · ':'')+'ผลงานประเภทที่ไม่มีในเกณฑ์ (ยังเปิดศึกษาได้ในคลังผลงาน) · เกณฑ์นี้กำหนดโดยผู้ดูแลระบบของคณะ และอาจปรับปรุงตามนโยบาย</p></section></div><div class="dlg-ft"><span class="grow"></span><button type="button" onclick="closeFac()">ปิด</button></div>';
   $('dlg').hidden=false; document.body.classList.add('dlg-open'); $('dlgBox').focus();
 }
 /* บุคลากรที่มีผลงาน */
@@ -1503,16 +1520,20 @@ function facGo(sec){ var el=$(sec==='people'?'facPeople':'facRepo'); if(el) el.s
 var FYSEL='', PCUR=[], FLIST=null;
 function facW(){ return FYSEL?FAC.works.filter(function(x){ return fyOf(x)===Number(FYSEL); }):FAC.works; }
 /* ตรงกับเซิร์ฟเวอร์: ใช้ hasOwnProperty เพื่อให้คะแนน 0 = ไม่นับ ทำงานถูกต้อง */
-function facWeight(x){ var Wt=FAC.weights||{}, has=function(k){ return Object.prototype.hasOwnProperty.call(Wt,k); };
-  if(x.c==='ผลงานตีพิมพ์') return has(x.l)?Wt[x.l]:(has('ผลงานตีพิมพ์ระดับอื่น')?Wt['ผลงานตีพิมพ์ระดับอื่น']:2);
-  return has(x.c)?Wt[x.c]:0; }   /* โครงการวิจัย / การนำเสนอ / อื่น ๆ = ไม่นับคะแนน */
+/* เกณฑ์คะแนนจากผู้ดูแลระบบ (ตรงกับเซิร์ฟเวอร์): กฎที่ระบุระดับตรงกันก่อน (ถ้าปิด = 0) → กฎ “ทุกระดับ” → ไม่พบ = 0 */
+function facRuleFor(x){
+  var cat=(FAC.rules||[]).filter(function(r){ return r.cat===x.c; });
+  var ex=cat.filter(function(r){ return r.level&&r.level===x.l; })[0]; if(ex) return ex.on!==false?ex:null;
+  var g=cat.filter(function(r){ return !r.level; })[0]; return g&&g.on!==false?g:null;
+}
+function facWeight(x){ var r=facRuleFor(x); return r?r.w:0; }
 /* สถิติบุคลากรจากผลงานชุดที่เลือก (ปีความต่อเนื่องใช้ข้อมูลสะสมจากเซิร์ฟเวอร์) */
 function facPeopleStats(W){
   var o={};
   W.forEach(function(x){
     var b=FP[x.o]; if(!b) return;
     var p=o[x.o]||(o[x.o]={u:b.u,name:b.name,position:b.position,rank:b.rank,unit:b.unit,group:b.group,photo:b.photo,years:b.years||[],latest:'',total:0,done:0,score:0,docs:0,cats:{}});
-    p.total++; p.done++; p.score+=facWeight(x); p.docs+=x.docs||0; p.cats[x.c]=(p.cats[x.c]||0)+1;
+    p.total++; p.done++; p.score=Math.round((p.score+facWeight(x))*10)/10; p.docs+=x.docs||0; p.cats[x.c]=(p.cats[x.c]||0)+1;
     if(String(x.upd)>p.latest) p.latest=String(x.upd);
   });
   return Object.keys(o).map(function(k){ return o[k]; });
@@ -1522,10 +1543,9 @@ function fyLabel(){ return FYSEL?'ปีงบประมาณ '+FYSEL:'ข้
 function renderFaculty(j){
   FAC=j; FP={}; (j.people||[]).forEach(function(p){ FP[p.u]=p; });
   FX={q:'',ser:'',fy:'',sort:'new',n:20}; FYSEL='';
-  document.querySelector('.top .name b').textContent='คลังผลงานวิชาการและวิจัย';
-  document.querySelector('.top .name span').textContent='บุคลากรคณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม';
+  applyBrand(j.brand,true);
   var h='<div class="fac">';
-  h+='<section class="fhero"><div class="fh-l"><h1>คลังผลงานวิชาการและวิจัย <span>คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</span></h1><p class="fasof" id="fAsof"></p></div>'+
+  h+='<section class="fhero"><div class="fh-l"><h1>'+esc(BRAND.title)+' <span>'+esc(BRAND.org)+'</span></h1><p class="fasof" id="fAsof"></p></div>'+
     '<div class="fh-r"><span class="fh-k">ปีงบประมาณ</span><div class="fyb" id="fFY" role="group" aria-label="เลือกปีงบประมาณ"></div></div></section>';
   h+='<div class="hero fkpi" id="fKpi"></div>';
   h+='<div class="fgrid2 fbal"><section class="fcard"><div class="fc-hd"><div><h2>ผลงานสำเร็จรายปีงบประมาณ</h2><p class="lead">แยกตามประเภทและระดับ · กดแท่งเพื่อเลือกปีงบประมาณ</p></div></div><div id="f3d"></div>'+
