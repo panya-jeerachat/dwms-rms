@@ -1294,6 +1294,7 @@ function showWork(w){
     kv('บทบาทของเจ้าของผลงาน',esc(w.role))+
     kv(w.category==='โครงการวิจัย'?'แหล่งทุน':(w.category==='ผลงานตีพิมพ์'?'วารสาร/การประชุม':'หน่วยงาน/แหล่งเผยแพร่'),esc(w.source))+
     kv('ปีที่ ฉบับที่ หน้า/รายละเอียด',esc(w.detail))+
+    kv(ddLabel(w.category),w.doneDate?esc(thDD(w.doneDate)):'')+
     kv(yearLbl,w.year?'พ.ศ. '+esc(w.year):'')+
     kv('ปีงบประมาณ',w.fiscalYear?esc(w.fiscalYear):'')+
     kv('ระดับ',esc(w.level))+kv('สถานะ',esc(w.status))+
@@ -1461,13 +1462,13 @@ function facSeries(W){ return FSER.filter(function(s){ return W.some(function(x)
 /* คลังผลงาน */
 function facMini(x){
   var p=FP[x.o]||{};
-  return '<button class="fmini" style="--c:'+facColor(x)+'" onclick="facOpen(\''+esc(x.id)+'\')">'+personPh(p,'fph')+'<span class="tx"><span class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span></span><b>'+esc(x.t)+'</b><small>'+esc(p.name||x.o)+(x.y?' · พ.ศ. '+x.y:'')+'</small></span></button>';
+  return '<button class="fmini" style="--c:'+facColor(x)+'" onclick="facOpen(\''+esc(x.id)+'\')">'+personPh(p,'fph')+'<span class="tx"><span class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span></span><b>'+esc(x.t)+'</b><small>'+esc(p.name||x.o)+(x.dd?' · สำเร็จ '+esc(thDD(x.dd)):(x.y?' · พ.ศ. '+x.y:''))+'</small></span></button>';
 }
 /* คลังผลงาน */
 function facRow(x){
   var p=FP[x.o]||{}, files=docsOf({bookFile:x.book,files:x.files});
   return '<article class="frow" style="--c:'+facColor(x)+'"><div class="frow-bar'+(facDone(x)?'':' wip')+'"></div><div class="frow-main">'+
-    '<div class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span><span class="st '+(facDone(x)?'ok':'wip')+'">'+esc(x.s)+'</span>'+(x.y||x.fy?'<span>'+(x.y?'พ.ศ. '+x.y:'ปีงบ '+x.fy)+'</span>':'')+(x.l?'<span>'+esc(x.c)+'</span>':'')+'</div>'+
+    '<div class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span><span class="st '+(facDone(x)?'ok':'wip')+'">'+esc(x.s)+'</span>'+(x.dd?'<span>📅 '+esc(thDD(x.dd))+'</span>':(x.y||x.fy?'<span>'+(x.y?'พ.ศ. '+x.y:'ปีงบ '+x.fy)+'</span>':''))+(x.l?'<span>'+esc(x.c)+'</span>':'')+'</div>'+
     '<h3><a href="#" onclick="facOpen(\''+esc(x.id)+'\');return false">'+esc(x.t)+'</a></h3>'+(x.te?'<div class="en">'+esc(x.te)+'</div>':'')+
     '<div class="fown"><a href="'+esc(personUrl(x.o))+'">'+personPh(p,'fph-s')+'<span>'+esc(p.name||x.o)+'</span></a>'+(p.position?'<small>'+esc(p.position)+'</small>':'')+'</div>'+
     ([x.src,x.d].filter(Boolean).length?'<div class="src">'+esc([x.src,x.d].filter(Boolean).join(', '))+'</div>':'')+
@@ -1484,7 +1485,7 @@ function facOpen(id){
   var h='<div class="dlg-hd"><span class="rule" style="background:'+facColor(x)+'"></span><div class="badges"><span class="lv" style="background:'+facColor(x)+'">'+esc(x.l||x.c)+'</span><span class="st '+(facDone(x)?'ok':'wip')+'">'+esc(x.s)+'</span>'+(x.l?'<span>'+esc(x.c)+'</span>':'')+'</div>'+
     '<h2 id="dlgTitle">'+esc(x.t)+'</h2>'+(x.te?'<div class="en">'+esc(x.te)+'</div>':'')+'<button class="dlg-x" type="button" onclick="closeFac()" aria-label="ปิด">×</button></div><div class="dlg-bd">'+
     '<section class="dsec"><a class="fowner" href="'+esc(personUrl(x.o))+'">'+personPh(p,'fph-l')+'<span><b>'+esc(p.name||x.o)+'</b><small>'+esc([p.position,p.rank,p.unit].filter(Boolean).join(' · '))+'</small><em>ดูผลงานทั้งหมดของบุคลากรท่านนี้ ›</em></span></a></section>'+
-    '<section class="dsec"><h3>ข้อมูลผลงาน</h3><dl class="kvg">'+kv('ผู้แต่ง/คณะผู้จัดทำ',esc(x.a))+kv('แหล่งเผยแพร่',esc(x.src))+kv('รายละเอียด',esc(x.d))+kv('ปี',x.y?'พ.ศ. '+esc(x.y):'')+kv('ปีงบประมาณ',esc(x.fy||''))+kv('คำสำคัญ',esc(x.kw))+
+    '<section class="dsec"><h3>ข้อมูลผลงาน</h3><dl class="kvg">'+kv('ผู้แต่ง/คณะผู้จัดทำ',esc(x.a))+kv('แหล่งเผยแพร่',esc(x.src))+kv('รายละเอียด',esc(x.d))+kv(ddLabel(x.c),x.dd?esc(thDD(x.dd)):'')+kv('ปี',x.y?'พ.ศ. '+esc(x.y):'')+kv('ปีงบประมาณ',esc(x.fy||''))+kv('คำสำคัญ',esc(x.kw))+
       kv('ลิงก์ผลงาน',safeUrl(x.url)?'<a href="'+esc(safeUrl(x.url))+'" target="_blank" rel="noopener">'+esc(x.url)+'</a>':'')+kv('หนังสือรับรองการเผยแพร่',x.ev?x.ev+' ฉบับ (ดูในหน้าบุคลากร)':'')+'</dl></section>'+
     '<section class="dsec"><h3>เอกสารผลงาน <span class="n">'+docs.length+'</span></h3>'+(docs.length?'<div class="docs">'+docs.map(function(d,i){ return docRow(d,'f'+i); }).join('')+'</div>':'<p class="lead" style="margin:0">ยังไม่มีเอกสารที่เผยแพร่</p>')+'</section></div>'+
     '<div class="dlg-ft"><span class="grow"></span><a class="btnl" href="'+esc(personUrl(x.o,'w-'+x.id))+'">เปิดในหน้าผลงานของบุคลากร (บทคัดย่อ หลักฐาน การอ้างอิง) ›</a><button type="button" onclick="closeFac()">ปิด</button></div>';
@@ -1541,9 +1542,14 @@ function facPeopleStats(W){
 function fyLabel(){ return FYSEL?'ปีงบประมาณ '+FYSEL:'ข้อมูลสะสมทั้งหมด'; }
 
 /* เรียงตาม “ช่วงเวลาที่สำเร็จ” ใหม่ก่อน (ตรงกับเซิร์ฟเวอร์): ปีที่ตีพิมพ์/เผยแพร่ → ปีงบประมาณ → วันที่เผยแพร่ล่าสุดจากหลักฐาน → วันที่แก้ไข */
+function thDD(d){ var x=new Date(String(d)+'T00:00:00'); return d&&!isNaN(x)?x.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'}):''; }
+function ddLabel(cat){ return cat==='ผลงานตีพิมพ์'?'วันที่ตีพิมพ์เผยแพร่':(cat==='รางวัล'?'วันที่ได้รับรางวัล':(cat==='คู่มือปฏิบัติงาน'||cat==='ผลงานเชิงวิเคราะห์'?'วันที่เผยแพร่':(cat==='การนำเสนอ'?'วันที่นำเสนอ':'วันที่เสร็จสิ้น'))); }
+/* เรียงตาม “วันที่สำเร็จ” ใหม่ก่อน (ตรงกับเซิร์ฟเวอร์) → ปีที่ตีพิมพ์/เผยแพร่/ปีงบประมาณ → วันที่เผยแพร่จากหลักฐาน → วันที่แก้ไข */
 function facCmp(a,b){
-  var ya=Number(a.y)||Number(a.fy)||0, yb=Number(b.y)||Number(b.fy)||0;
-  return (yb-ya)||((Number(b.fy)||0)-(Number(a.fy)||0))||String(b.ed||'').localeCompare(String(a.ed||''))||String(b.upd||'').localeCompare(String(a.upd||''));
+  var da=a.dd||a.ed||'', db=b.dd||b.ed||'';
+  var be=function(d){ return Number(String(d).slice(0,4))+543; };
+  var ya=a.dd?be(a.dd):(Number(a.y)||Number(a.fy)||(da?be(da):0)), yb=b.dd?be(b.dd):(Number(b.y)||Number(b.fy)||(db?be(db):0));
+  return (yb-ya)||String(db).localeCompare(String(da))||((Number(b.fy)||0)-(Number(a.fy)||0))||String(b.upd||'').localeCompare(String(a.upd||''));
 }
 function renderFaculty(j){
   FAC=j; FP={}; (j.people||[]).forEach(function(p){ FP[p.u]=p; });
