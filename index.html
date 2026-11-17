@@ -778,10 +778,22 @@ function applyBrand(b,faculty){
   if(faculty){ nb.textContent=BRAND.title; ns.textContent='บุคลากร'+BRAND.org; document.title=BRAND.title+' · '+BRAND.org; }
   else ns.textContent=BRAND.org;
 }
+/* ลำดับผลงาน “ล่าสุดก่อน” (ตรงกับเซิร์ฟเวอร์): กำลังดำเนินการก่อน (ปีงบใหม่ก่อน) → สำเร็จแล้วตามวันที่ตอบรับ/รับรองผลใหม่ก่อน → ระดับ → ลำดับเดิม */
+var WRK_DONE=['ตีพิมพ์แล้ว','เสร็จสิ้น','เผยแพร่แล้ว','ได้รับรางวัล'];
+var WRK_RANK={'Scopus/ISI':0,'TCI กลุ่ม 1':1,'TCI กลุ่ม 2':2,'Proceedings ระดับนานาชาติ':3,'Proceedings ระดับชาติ':4,'ระดับคณะ/มหาวิทยาลัย':5};
+function workCmp(a,b){
+  var da=WRK_DONE.indexOf(a.status)>=0, db=WRK_DONE.indexOf(b.status)>=0;
+  if(da!==db) return da?1:-1;
+  var la=WRK_RANK.hasOwnProperty(a.level)?WRK_RANK[a.level]:9, lb=WRK_RANK.hasOwnProperty(b.level)?WRK_RANK[b.level]:9;
+  if(!da) return ((Number(b.fiscalYear)||Number(b.year)||0)-(Number(a.fiscalYear)||Number(a.year)||0))||(la-lb)||((a.order||0)-(b.order||0));
+  var ka=String(a.doneDate||''), kb=String(b.doneDate||''), be=function(d){ return Number(d.slice(0,4))+543; };
+  var ya=ka?be(ka):(Number(a.year)||Number(a.fiscalYear)||0), yb=kb?be(kb):(Number(b.year)||Number(b.fiscalYear)||0);
+  return (yb-ya)||kb.localeCompare(ka)||(la-lb)||((a.order||0)-(b.order||0));
+}
 function render(j){
   applyBrand(j.brand,j.mode==='faculty');
   if(j.mode==='faculty'){ renderFaculty(j); return; }
-  D=j; D.works=(D.works||[]).slice();
+  D=j; D.works=(D.works||[]).slice().sort(workCmp);   /* ทุกส่วนของหน้ารายบุคคลใช้ลำดับ “ล่าสุดก่อน” */
   var names=String(D.profile.owner_names||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
   OWNER_RX=names.length?new RegExp('('+names.map(function(n){return esc(n).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','g'):null;
   TABS.forEach(function(t){ if(t.cats) t.items=D.works.filter(function(w){ return t.cats.indexOf(w.category)>=0; }); });
