@@ -1540,8 +1540,14 @@ function facPeopleStats(W){
 }
 function fyLabel(){ return FYSEL?'ปีงบประมาณ '+FYSEL:'ข้อมูลสะสมทั้งหมด'; }
 
+/* เรียงตาม “ช่วงเวลาที่สำเร็จ” ใหม่ก่อน (ตรงกับเซิร์ฟเวอร์): ปีที่ตีพิมพ์/เผยแพร่ → ปีงบประมาณ → วันที่เผยแพร่ล่าสุดจากหลักฐาน → วันที่แก้ไข */
+function facCmp(a,b){
+  var ya=Number(a.y)||Number(a.fy)||0, yb=Number(b.y)||Number(b.fy)||0;
+  return (yb-ya)||((Number(b.fy)||0)-(Number(a.fy)||0))||String(b.ed||'').localeCompare(String(a.ed||''))||String(b.upd||'').localeCompare(String(a.upd||''));
+}
 function renderFaculty(j){
   FAC=j; FP={}; (j.people||[]).forEach(function(p){ FP[p.u]=p; });
+  FAC.works=(FAC.works||[]).slice().sort(facCmp);
   FX={q:'',ser:'',fy:'',sort:'new',n:20}; FYSEL='';
   applyBrand(j.brand,true);
   var h='<div class="fac">';
@@ -1550,11 +1556,11 @@ function renderFaculty(j){
   h+='<div class="hero fkpi" id="fKpi"></div>';
   h+='<div class="fgrid2 fbal"><section class="fcard"><div class="fc-hd"><div><h2>ผลงานสำเร็จรายปีงบประมาณ</h2><p class="lead">แยกตามประเภทและระดับ · กดแท่งเพื่อเลือกปีงบประมาณ</p></div></div><div id="f3d"></div>'+
       '<div class="fsep"></div><div class="fc-hd"><div><h2>ผลงานตามประเภท <small id="fDnLbl"></small></h2><p class="lead">กดประเภทเพื่อดูรายละเอียดและรายการผลงาน</p></div></div><div id="fDonut"></div></section>'+
-    '<section class="fcard fcol"><h2>ผลงานล่าสุด <small id="fLatLbl"></small></h2><p class="lead">อัปเดตใหม่ล่าสุดจากบุคลากร</p><div class="flatest" id="fLatest"></div></section></div>';
+    '<section class="fcard fcol"><h2>ผลงานล่าสุด <small id="fLatLbl"></small></h2><p class="lead">ผลงานที่สำเร็จล่าสุด เรียงตามปีที่ตีพิมพ์/เผยแพร่</p><div class="flatest" id="fLatest"></div></section></div>';
   h+='<section class="fcard"><h2>สรุปผลงานรายปีงบประมาณแยกตามประเภท</h2><p class="lead">กดตัวเลขเพื่อดูรายละเอียด · แถวที่เน้น = ปีงบประมาณที่เลือก</p><div id="fMx"></div></section>';
-  h+='<section class="fcard" id="facRepo"><h2>คลังผลงาน <small id="fRepoLbl"></small></h2><p class="lead">ค้นหา เปิดดู และดาวน์โหลดเอกสารเพื่อศึกษาเป็นตัวอย่าง</p>'+
+  h+='<section class="fcard" id="facRepo"><h2>คลังผลงาน <small id="fRepoLbl"></small></h2><p class="lead">ค้นหา เปิดดู และดาวน์โหลดเอกสารเพื่อศึกษาเป็นตัวอย่าง · เรียงผลงานที่สำเร็จล่าสุดก่อน</p>'+
     '<div class="frepo-tools"><input id="facQ" placeholder="ค้นหาชื่อเรื่อง คำสำคัญ ผู้แต่ง ชื่อบุคลากร หน่วยงาน…" oninput="FX.q=this.value;FX.n=20;facRepo()">'+
-    '<select onchange="FX.sort=this.value;facRepo()"><option value="new">อัปเดตล่าสุดก่อน</option><option value="year">ปีงบประมาณใหม่ก่อน</option><option value="title">เรียงตามชื่อเรื่อง</option></select></div>'+
+    '<select onchange="FX.sort=this.value;facRepo()" aria-label="การเรียง"><option value="new">สำเร็จล่าสุดก่อน</option><option value="old">สำเร็จก่อนหลัง (เก่า → ใหม่)</option><option value="upd">แก้ไขข้อมูลล่าสุดก่อน</option><option value="title">เรียงตามชื่อเรื่อง</option></select></div>'+
     '<div class="filters" id="facCats"></div><div id="facList"></div></section>';
   h+='<section class="fcard" id="facRank"><h2>บุคลากรผลงานโดดเด่น <small id="fRankLbl"></small></h2><p class="lead">เชิดชูบุคลากรที่สร้างผลงานต่อเนื่องและมีหลักฐานเชิงประจักษ์ · <button class="lnk" onclick="facCriteria()">เกณฑ์การจัดลำดับ</button></p><div id="fRank"></div></section>';
   h+='<section class="fcard" id="facPeople"><h2>บุคลากรที่มีผลงาน <small id="fPplLbl"></small></h2><p class="lead">เลือกบุคลากรเพื่อดูหน้าผลงานรายบุคคล (รวมผลงานที่กำลังดำเนินการ)</p>'+
@@ -1662,8 +1668,10 @@ function facRepo(){
   $('facCats').innerHTML='<button class="chip" aria-pressed="'+(!FX.ser)+'" onclick="FX.ser=\'\';FX.n=20;facRepo()">ทั้งหมด<span class="cn">'+base.length+'</span></button>'+
     ser.map(function(s){ var n=base.filter(function(x){return serOf(x)===s.k;}).length; return '<button class="chip" aria-pressed="'+(FX.ser===s.k)+'" onclick="FX.ser=\''+esc(s.k)+'\';FX.n=20;facRepo()"><i class="cdot" style="background:'+s.c+'"></i>'+esc(s.k)+'<span class="cn" style="--cc:'+s.c+'">'+n+'</span></button>'; }).join('');
   var L=base.filter(function(x){ return !FX.ser||serOf(x)===FX.ser; });
-  if(FX.sort==='year') L=L.slice().sort(function(a,b){ return fyOf(b)-fyOf(a); });
+  if(FX.sort==='old') L=L.slice().sort(function(a,b){ return facCmp(b,a); });
+  else if(FX.sort==='upd') L=L.slice().sort(function(a,b){ return String(b.upd||'').localeCompare(String(a.upd||''))||facCmp(a,b); });
   else if(FX.sort==='title') L=L.slice().sort(function(a,b){ return String(a.t).localeCompare(String(b.t),'th'); });
+  else L=L.slice().sort(facCmp);   /* ค่าเริ่มต้น: สำเร็จล่าสุดก่อน */
   var show=L.slice(0,FX.n);
   $('facList').innerHTML=(show.length?'<div class="frows">'+show.map(facRow).join('')+'</div>':'<div class="empty">ไม่พบผลงานตามเงื่อนไข</div>')+
     (L.length>FX.n?'<div class="fmore"><button onclick="FX.n+=20;facRepo()">แสดงเพิ่มอีก '+Math.min(20,L.length-FX.n)+' รายการ (ทั้งหมด '+L.length+')</button></div>':'');
