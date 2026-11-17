@@ -580,6 +580,9 @@ body.dlg-open{overflow:hidden}
 .fwt i{width:11px;height:11px;border-radius:3px;flex:none}.fwt span{flex:1;font-size:14px}
 .fwt b{font-family:var(--rms-font);font-size:17px;color:var(--navy);min-width:34px;text-align:center;background:#EEF4FC;border-radius:8px;padding:1px 8px}
 
+.top .act .homebtn{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--navy)}
+.top .act .homebtn svg{flex:none}
+
 /* โครงร่างระหว่างโหลด */
 .sk{background:linear-gradient(90deg,#E6ECF4 25%,#F1F5FA 37%,#E6ECF4 63%);background-size:400% 100%;animation:shim 1.3s ease infinite;border-radius:6px}
 @keyframes shim{0%{background-position:100% 50%}100%{background-position:0 50%}}
@@ -634,7 +637,7 @@ body.dlg-open{overflow:hidden}
     <div class="name"><b>ผลงานวิชาการและวิจัย</b><span>คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</span></div>
     <div class="act">
       <span class="sync" id="sync" hidden><i></i><span class="txt"></span></span>
-      <a class="backfac" id="backFac" hidden href="./">← <span class="lbl">คลังผลงานคณะ</span></a>
+      <a class="homebtn" id="homeBtn" href="https://eng.msu.ac.th/" title="หน้าหลัก"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/></svg> <span class="lbl">หน้าหลัก</span></a>
       <button onclick="copyLink()" aria-label="คัดลอกลิงก์หน้านี้">🔗 <span class="lbl">คัดลอกลิงก์</span></button>
       <button onclick="window.print()" aria-label="พิมพ์หรือบันทึกเป็น PDF">🖨 <span class="lbl">พิมพ์ / PDF</span></button>
       <span class="vsep" aria-hidden="true"></span>
@@ -770,13 +773,21 @@ function retry(){ var n=$('skNote'); if(n) n.textContent='กำลังลอ�
 
 /* ───── สร้างหน้า ───── */
 /* ชื่อระบบ/หน่วยงาน/โลโก้ จากการตั้งค่าของผู้ดูแลระบบ (ไม่ต้องแก้ไฟล์นี้) */
-var BRAND={title:'คลังผลงานวิชาการและวิจัย',org:'คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม',logo:''};
+var BRAND={title:'คลังผลงานวิชาการและวิจัย',org:'คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม',logo:'',home:'https://eng.msu.ac.th/'};
+/* ปุ่ม “หน้าหลัก”: หน้าคลังผลงานของคณะ → เว็บไซต์หน่วยงาน · หน้ารายบุคคล → กลับหน้าคลังผลงานของคณะ */
+function setHome(faculty){
+  var a=$('homeBtn'); if(!a) return;
+  if(faculty){ a.href=BRAND.home||'https://eng.msu.ac.th/'; a.title='หน้าหลัก · '+BRAND.org; a.removeAttribute('target'); }
+  else { a.href=location.pathname; a.title='หน้าหลัก · '+BRAND.title+' (รวมทั้งคณะ)'; }
+}
+setHome(!CONFIG.U);
 function applyBrand(b,faculty){
   if(b) for(var k in b) if(b[k]) BRAND[k]=b[k];
   var img=$('brandLogo'); if(img&&BRAND.logo&&img.getAttribute('src')!==BRAND.logo){ img.src=BRAND.logo; } if(img) img.alt=BRAND.org;
   var nb=document.querySelector('.top .name b'), ns=document.querySelector('.top .name span');
   if(faculty){ nb.textContent=BRAND.title; ns.textContent='บุคลากร'+BRAND.org; document.title=BRAND.title+' · '+BRAND.org; }
   else ns.textContent=BRAND.org;
+  setHome(!!faculty);
 }
 /* ลำดับผลงาน “ล่าสุดก่อน” (ตรงกับเซิร์ฟเวอร์): กำลังดำเนินการก่อน (ปีงบใหม่ก่อน) → สำเร็จแล้วตามวันที่ตอบรับ/รับรองผลใหม่ก่อน → ระดับ → ลำดับเดิม */
 var WRK_DONE=['ตีพิมพ์แล้ว','เสร็จสิ้น','เผยแพร่แล้ว','ได้รับรางวัล'];
@@ -1787,7 +1798,7 @@ function closeLgn(){ $('lgnMask').hidden=true; }
 function pickLgn(mode){
   try{ localStorage.setItem('rms_lgn',mode); }catch(e){}
   refreshAdminLink();
-if(CONFIG.U){ var bf=$('backFac'); bf.hidden=false; bf.href=location.pathname; } closeLgn();
+closeLgn();
   window.open(lgnUrl(mode),'_blank','noopener');
 }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!$('lgnMask').hidden) closeLgn(); });
