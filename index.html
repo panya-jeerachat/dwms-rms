@@ -1029,7 +1029,7 @@ function overview(){
         return '<tr><td><button class="lnk" onclick="'+L(l,a)+'"><span class="dot" style="background:'+LEVEL_COLOR[LEVEL_CLS[l]||'oth']+'"></span>'+esc(l)+'</button></td><td class="n">'+cell(d,l+' · ตีพิมพ์แล้ว')+'</td><td class="n">'+cell(p,l+' · ระหว่างดำเนินการ')+'</td><td class="n">'+cell(a,l+' · ทั้งหมด')+'</td></tr>';
       }).join('')+'</tbody><tfoot><tr><td>รวมทั้งหมด</td><td class="n">'+cell(tot[0],'ผลงานตีพิมพ์แล้วทั้งหมด')+'</td><td class="n">'+cell(tot[1],'ผลงานตีพิมพ์ระหว่างดำเนินการ')+'</td><td class="n">'+cell(tot[2],'ผลงานตีพิมพ์ทั้งหมด')+'</td></tr></tfoot></table></div>';
   }
-  h+='</div><div class="sub"><h2>เส้นทางผลงานรายปีงบประมาณ</h2><p class="lead">1 กล่อง = 1 ผลงาน (ทุกประเภท) · กล่องเส้นประ = กำลังดำเนินการ · กดกล่องเพื่อดูรายละเอียด กดปีเพื่อดูทั้งปีงบประมาณ</p>'+cubes(W)+'</div></div>';
+  h+='</div><div class="sub"><h2>เส้นทางผลงานรายปีงบประมาณ</h2><p class="lead">1 กล่อง = 1 ผลงาน · ซ้อนตามวันที่ตอบรับ/รับรองผล (ล่างเก่า → บนใหม่) · กล่องเส้นประ = กำลังดำเนินการ · กดกล่องเพื่อดูรายละเอียด กดปีเพื่อดูทั้งปีงบประมาณ</p>'+cubes(W)+'</div></div>';
   /* 4) สัดส่วนตามประเภท */
   h+='<div class="sub"><h2>ผลงานตามประเภท</h2><p class="lead">กดประเภทเพื่อดูรายการ</p>'+donut(W)+'</div>';
   /* 5) แผนปีงบประมาณ */
@@ -1055,9 +1055,10 @@ function cubes(W){
   var years=Object.keys(by).sort(function(a,b){ return (Number(a)||99999)-(Number(b)||99999); });
   if(!years.length) return '<div class="empty">ยังไม่มีผลงาน</div>';
   var cols=years.map(function(y){
-    var list=by[y].slice().sort(function(a,b){ return (isDone(b)-isDone(a))||(CAT_ORDER.indexOf(a.category)-CAT_ORDER.indexOf(b.category)); });
+    /* ซ้อนตามเวลา: ล่างสุด = เก่าสุด → บนสุด = ใหม่สุด (วันที่ตอบรับ/รับรองผล) · กำลังดำเนินการอยู่บนสุด — กลับลำดับ “ล่าสุดก่อน” ของ workCmp */
+    var list=by[y].slice().sort(function(a,b){ return workCmp(b,a); });
     return '<div class="ycol"><div class="stack">'+list.map(function(w){
-      return '<button class="cube'+(isDone(w)?'':' wip')+'" style="--c:'+colorOf(w)+'" onclick="openWork(\''+esc(w.id)+'\')" title="'+esc(keyOf(w)+' · '+w.status+'\n'+w.title)+'" aria-label="'+esc(keyOf(w)+' '+w.status+' '+w.title)+'"></button>';
+      return '<button class="cube'+(isDone(w)?'':' wip')+'" style="--c:'+colorOf(w)+'" onclick="openWork(\''+esc(w.id)+'\')" title="'+esc(keyOf(w)+' · '+w.status+(w.doneDate?' · '+ddLabel(w.category)+' '+thDD(w.doneDate):'')+'\n'+w.title)+'" aria-label="'+esc(keyOf(w)+' '+w.status+(w.doneDate?' '+thDD(w.doneDate):'')+' '+w.title)+'"></button>';
     }).join('')+'</div><button class="ylab" onclick="'+L('ผลงานปีงบประมาณ '+y,list)+'">'+esc(y)+'<small>'+list.length+'</small></button></div>';
   }).join('');
   var keys=[]; W.forEach(function(w){ var k=keyOf(w); if(!keys.some(function(x){return x[0]===k;})) keys.push([k,colorOf(w)]); });
